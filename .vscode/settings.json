@@ -1,0 +1,25 @@
+{
+    "java.configuration.runtimes": [
+        {
+            "name": "JavaSE-21",
+            "path": "c:\\Program Files\\GraalVM\\graalvm-jdk-21.0.1+12.1",
+            "default": true
+        }
+    ],
+    "graalvm.home": "c:\\Program Files\\GraalVM\\graalvm-jdk-21.0.1+12.1",
+    "graalvm.installations": [
+        "c:\\Program Files\\GraalVM\\graalvm-jdk-21.0.1+12.1"
+    ],
+    "terminal.integrated.env.windows": {
+        "GRAALVM_HOME": "c:\\Program Files\\GraalVM\\graalvm-jdk-21.0.1+12.1",
+        "JAVA_HOME": "c:\\Program Files\\GraalVM\\graalvm-jdk-21.0.1+12.1",
+        "PATH": "c:\\Program Files\\GraalVM\\graalvm-jdk-21.0.1+12.1\\bin;${env:PATH}"
+    },
+    "java.home": "c:\\Program Files\\GraalVM\\graalvm-jdk-21.0.1+12.1",
+    "maven.terminal.customEnv": [
+        {
+            "environmentVariable": "JAVA_HOME",
+            "value": "c:\\Program Files\\GraalVM\\graalvm-jdk-21.0.1+12.1"
+        }
+    ]
+}
