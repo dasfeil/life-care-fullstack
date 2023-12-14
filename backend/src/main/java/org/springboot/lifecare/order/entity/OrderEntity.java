@@ -1,27 +1,21 @@
 package org.springboot.lifecare.order.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.springboot.lifecare.user.entity.User;
+import lombok.*;
+import org.springboot.lifecare.user_order.entity.UserOrderEntity;
 
 @Entity
-@Table(name = "ORDER_HISTORY")
-@Getter @Setter @NoArgsConstructor
+@Table(name = "ORDERS", uniqueConstraints = {@UniqueConstraint(columnNames = "id")})
+@Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class OrderEntity {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user.id")
-    private User user;
-
     @Column(nullable = false)
-    private String order;
+    private String name;
 
     @Column(nullable = false)
     private Integer basePrice;
@@ -34,4 +28,7 @@ public class OrderEntity {
 
     @Column(nullable = false)
     private Integer finalPrice;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "order_id")
+    private UserOrderEntity userOrderEntity;
 }

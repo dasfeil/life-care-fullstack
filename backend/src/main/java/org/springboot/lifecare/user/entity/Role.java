@@ -8,20 +8,22 @@ import org.springframework.security.core.GrantedAuthority;
 import java.io.Serializable;
 
 
-@Entity
+@Entity(name = "ROLE")
 @Getter @Setter
 @NoArgsConstructor
+@RequiredArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Role implements Serializable  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
-    @Enumerated(EnumType.STRING)
-    RoleName roleName ;
+    private Integer id;
 
-    public Role (RoleName roleName) {this.roleName = roleName;}
+    @NonNull
+    @Enumerated(EnumType.STRING)
+    private RoleName roleName ;
+
     public String getRoleName() {
         return roleName.toString();
     }

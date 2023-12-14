@@ -1,12 +1,10 @@
 package org.springboot.lifecare.user.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springboot.lifecare.order.entity.OrderEntity;
+import org.springboot.lifecare.user_order.entity.UserOrderEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,32 +14,37 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Entity
-@Table(indexes = @Index(columnList = "id, name"), uniqueConstraints = {@UniqueConstraint(columnNames = {"userNo"})})
-@Getter @Setter @NoArgsConstructor
+@Entity(name = "USER")
+@Table(indexes = @Index(columnList = "id, username"), uniqueConstraints = {@UniqueConstraint(columnNames = {"user_no"})})
+@Getter @Setter @RequiredArgsConstructor
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User implements Serializable, UserDetails {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long userNo;
 
+    @NonNull
     @Column(unique = true, nullable = false)
     private Integer id;
 
+    @NonNull
     @Column(nullable = false)
     private String username;
 
+    @NonNull
     @Column(nullable = false)
     private String password;
 
+    @NonNull
     @Column(nullable = false)
     private UserRank userRank;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<OrderEntity> orderHistory = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    private List<Role> roles;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-    List<Role> roles ;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user_id")
+    private List<UserOrderEntity> userOrderEntities;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -69,4 +72,5 @@ public class User implements Serializable, UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }
