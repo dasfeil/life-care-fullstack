@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 @Entity(name = "USER")
@@ -34,7 +35,18 @@ public class User implements Serializable, UserDetails {
 
     @NonNull
     @Column(nullable = false)
+    private String email;
+
+    @NonNull
+    @Column(nullable = false)
     private String password;
+
+    @NonNull
+    @Column(nullable = false)
+    private Long phoneNo;
+
+    @Temporal(TemporalType.DATE)
+    private Date joinDate;
 
     @NonNull
     @Column(nullable = false)

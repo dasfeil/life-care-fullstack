@@ -9,5 +9,6 @@ public class UserCreationDTO {
     private Integer id;
     private String name;
     private String password;
-    private String rank;
+    private String email;
+    private Long phoneNo;
 }

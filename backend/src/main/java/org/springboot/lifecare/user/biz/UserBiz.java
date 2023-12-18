@@ -36,9 +36,6 @@ import java.util.List;
 public class UserBiz implements UserDetailsService {
     private final UserDAO userDAO;
 
-    private final RoleDAO roleDAO;
-
-
     private final AuthenticationManager authenticationManager;
 
     private final PasswordEncoder passwordEncoder;
@@ -49,20 +46,19 @@ public class UserBiz implements UserDetailsService {
     @Value("${jwt.expiration}")
     private Long expiration;
 
-    public UserBiz(UserDAO userDAO, RoleDAO roleDAO,
+    public UserBiz(UserDAO userDAO,
                    @Lazy AuthenticationManager authenticationManager,
                    @Lazy PasswordEncoder passwordEncoder) {
         this.userDAO = userDAO;
-        this.roleDAO = roleDAO;
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
     }
 
     public ResponseEntity<?> register(UserCreationDTO userDTO) {
         User user = new User(
-                userDTO.getId(), userDTO.getName(),
-                passwordEncoder.encode(userDTO.getPassword()), UserRank.valueOf(userDTO.getRank())
-        );
+                userDTO.getId(), userDTO.getName(), userDTO.getEmail(),
+                passwordEncoder.encode(userDTO.getPassword()),
+                userDTO.getPhoneNo(), UserRank.BRONZE);
         Role role = new Role(RoleName.USER);
         user.setRoles(Collections.singletonList(role));
         String token = getToken(user, Collections.singletonList(role.getRoleName()));

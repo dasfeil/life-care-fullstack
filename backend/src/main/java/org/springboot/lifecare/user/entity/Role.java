@@ -3,7 +3,6 @@ package org.springboot.lifecare.user.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.springframework.security.core.GrantedAuthority;
 
 import java.io.Serializable;
 
