@@ -1,5 +1,6 @@
+import { Outlet } from "react-router-dom";
 
-export default function MemberLayout({ children }: { children: React.ReactNode }) {
+export default function Root() {
   return (
     <>
       <div className="bg-black w-screen h-12 flex">
@@ -7,7 +8,9 @@ export default function MemberLayout({ children }: { children: React.ReactNode }
           lifecare
         </a>
       </div>
-      {children}
+      <div className="sm:w-full">
+        <Outlet/>
+      </div>
     </>
   );
 }
