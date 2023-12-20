@@ -7,8 +7,8 @@ import Instance from "../axios/instance";
 const LoginSchema = Yup.object().shape({
   id: Yup.string()
     .min(4, "Email or ID has to be 4 or more letters")
-    .required("Required"),
-  password: Yup.string().required("Required"),
+    .required("Email or ID is required"),
+  password: Yup.string().required("Password is required"),
 });
 
 const initialValues = {
@@ -29,22 +29,20 @@ const LoginForm = () => {
     >
       {() => (
         <Form>
-          <Field
+          <TextInput
             name="id"
-            component={TextInput}
             label="Email or ID"
             placeholder="Email or ID"
             type="text"
           />
-          <Field
+          <TextInput
             name="password"
-            component={TextInput}
             type="password"
             label="Password"
             placeholder="Password"
             className="my-2"
           />
-          <div className="w-full my-2">
+          <div className="my-2">
             <label className="relative inline-flex items-center cursor-pointer">
               <Field type="checkbox" name="remember" className="sr-only peer" />
               <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>

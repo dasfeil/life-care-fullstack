@@ -23,7 +23,7 @@ const PillButton = ({styleType, type, text, className, ...props }: Props) => {
       break;
   }
   
-  style += "w-[15rem] sm:w-[20rem] font-semibold rounded-full p-2 " + className;
+  style += "w-[20rem] font-semibold rounded-full p-2 " + className;
   return (
     <button {...props} className={style} type={type}>
       <div className="flex relative h-[32px] ">

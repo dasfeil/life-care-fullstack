@@ -1,16 +1,14 @@
-import { Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 
 export default function Root() {
   return (
-    <>
-      <div className="bg-black w-screen h-12 flex">
-        <a className="text-white m-1 self-center" href="/">
+    <div>
+      <div className="bg-black w-full h-12 flex justify-between">
+        <Link className="text-white m-1 self-center" to="/">
           lifecare
-        </a>
+        </Link>
       </div>
-      <div className="sm:w-full">
-        <Outlet/>
-      </div>
-    </>
+      <Outlet />
+    </div>
   );
 }
