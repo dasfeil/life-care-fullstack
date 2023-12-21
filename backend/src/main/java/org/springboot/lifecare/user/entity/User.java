@@ -17,7 +17,8 @@ import java.util.List;
 
 @Entity(name = "USER")
 @Table(indexes = @Index(columnList = "id, username"), uniqueConstraints = {@UniqueConstraint(columnNames = {"user_no"})})
-@Getter @Setter @RequiredArgsConstructor
+@Getter @Setter
+@RequiredArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User implements Serializable, UserDetails {

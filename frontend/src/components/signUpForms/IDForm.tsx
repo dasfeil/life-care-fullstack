@@ -4,7 +4,7 @@ import TextInput from "../TextInput";
 import { useFormikContext } from "formik";
 
 const IDForm = () => {
-    const {submitForm} = useFormikContext();
+  const { submitForm } = useFormikContext();
   return (
     <>
       <TextInput
@@ -26,7 +26,7 @@ const IDForm = () => {
       <PillButton styleType="facebook" className="mb-3 hover:bg-[#2f477a]" />
       <PillButton styleType="google" className="hover:bg-[#dddddd]" />
       <hr className="my-5 w-[24rem] border-t-gray-300" />
-      <p>
+      <p className="text-center">
         Already have an account?{" "}
         <Link
           to="/login"

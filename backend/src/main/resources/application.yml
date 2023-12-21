@@ -15,6 +15,7 @@ spring:
 jwt:
     secret: NU1q4U5Xti95yshyUPVjWL2fiKIp2KYo7BoeYVkRL2Q=
     expiration: 36000000
+    refreshExpiration: 86400000
 
 logging:
     level:

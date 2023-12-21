@@ -3,7 +3,6 @@ package org.springboot.lifecare.user.biz;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.springboot.lifecare.user.dao.RoleDAO;
 import org.springboot.lifecare.user.dao.UserDAO;
 import org.springboot.lifecare.user.dto.UserCreationDTO;
 import org.springboot.lifecare.user.dto.UserDTO;

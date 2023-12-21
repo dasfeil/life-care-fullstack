@@ -1,15 +1,10 @@
 import * as Yup from "yup";
 import { Form } from "react-router-dom";
 import { useState } from "react";
-import { Formik, FormikHelpers, FormikValues, validateYupSchema } from "formik";
-import IDForm from "../components/signUpForms/idForm";
+import { Formik, FormikHelpers, FormikValues } from "formik";
+import IDForm from "../components/signUpForms/IDForm";
 import PasswordForm from "../components/signUpForms/PasswordForm";
-
-// private Integer id;
-// private String name;
-// private String password;
-// private String email;
-// private Long phoneNo;
+import DetailForm from "../components/signUpForms/DetailForm";
 
 const signUpSchema = [
   Yup.object().shape({
@@ -63,7 +58,7 @@ const signUpSchema = [
             tempValue.forEach((element) => {
               combs.forEach((comb) => {
                 if (element.toString().includes(comb)) {
-                  console.log(comb)
+                  console.log(comb);
                   valid = false;
                 }
               });
@@ -85,9 +80,15 @@ const signUpSchema = [
     name: Yup.string()
       .matches(/^[a-zA-Z]+$/, "Name should only contain English letters")
       .required("Name is required"),
-    phoneNo: Yup.number().required("Name is required"),
-    email: Yup.string().matches(/.*/).required("Email is required"),
-    emailDomain: Yup.string().required("Email domain is required"),
+    phoneNo: Yup.string()
+      .matches(/^[\d]*$/, "Number can only contain digits (0-9)")
+      .required("Phone number is required"),
+    email: Yup.string()
+      .matches(/^[\w.!@#$%^&*]+$/, "Email is not valid")
+      .required("Email is required"),
+    emailDomain: Yup.string()
+      .matches(/^([\w-]+\.)+[\w-]{2,4}$/, "Invalid domain")
+      .required("Email domain is required"),
   }),
 ];
 
@@ -106,9 +107,9 @@ function renderFormStep(step: number, handleBack: Function) {
     case 0:
       return <IDForm />;
     case 1:
-      return <PasswordForm />;
+      return <PasswordForm handleBack={handleBack} />;
     case 2:
-      return <></>;
+      return <DetailForm handleBack={handleBack} />;
     default:
       return <div>Not Found</div>;
   }
@@ -135,7 +136,7 @@ export default function SignUp() {
   };
 
   const handleBack = () => {
-    setStep((state) => state - 1);
+    setStep((state) => (state = state - 1));
   };
 
   return (
@@ -151,7 +152,7 @@ export default function SignUp() {
       validateOnChange={false}
     >
       {() => (
-        <Form method="post" action="" className="mt-24 min-h-screen flex flex-col items-center">
+        <Form className="mt-24 min-h-screen flex flex-col items-center">
           {renderFormStep(step, handleBack)}
         </Form>
       )}

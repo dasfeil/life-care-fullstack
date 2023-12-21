@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import TextInput from "./TextInput";
 import Instance from "../axios/instance";
 
-const LoginSchema = Yup.object().shape({
+const loginSchema = Yup.object().shape({
   id: Yup.string()
     .min(4, "Email or ID has to be 4 or more letters")
     .required("Email or ID is required"),
@@ -22,7 +22,7 @@ const LoginForm = () => {
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={LoginSchema}
+      validationSchema={loginSchema}
       onSubmit={(values) => {
         Instance.post('/login', values).then(console.log)
       }}

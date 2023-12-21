@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springboot.lifecare.user.biz.UserBiz;
+import org.springboot.lifecare.user.dto.RefreshTokenDTO;
 import org.springboot.lifecare.user.dto.UserCreationDTO;
 import org.springboot.lifecare.user.dto.UserDTO;
 import org.springboot.lifecare.user.entity.User;
@@ -28,8 +29,8 @@ public class UserController {
         return userBiz.authenticate(userDTO);
     }
 
-    @GetMapping("/")
-    public void sayHello() {
-        System.out.println("Hello");
+    @GetMapping("/refresh")
+    public String refreshToken(@RequestBody RefreshTokenDTO refreshTokenDTO) {
+        return "bruh";
     }
 }
