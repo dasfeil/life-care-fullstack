@@ -1,10 +1,11 @@
 package org.springboot.lifecare.user.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.springboot.lifecare.order.entity.OrderEntity;
-import org.springboot.lifecare.user_order.entity.UserOrderEntity;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -47,6 +48,7 @@ public class User implements Serializable, UserDetails {
     private Long phoneNo;
 
     @Temporal(TemporalType.DATE)
+    @CreationTimestamp
     private Date joinDate;
 
     @NonNull
@@ -55,9 +57,6 @@ public class User implements Serializable, UserDetails {
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private List<Role> roles;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user_id")
-    private List<UserOrderEntity> userOrderEntities;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

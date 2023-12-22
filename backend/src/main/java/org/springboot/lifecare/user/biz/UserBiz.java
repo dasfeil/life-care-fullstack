@@ -4,14 +4,14 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springboot.lifecare.user.dao.UserDAO;
-import org.springboot.lifecare.user.dto.UserCreationDTO;
-import org.springboot.lifecare.user.dto.UserDTO;
-import org.springboot.lifecare.user.entity.Role;
-import org.springboot.lifecare.user.entity.RoleName;
+import org.springboot.lifecare.user.dto.*;
 import org.springboot.lifecare.user.entity.User;
 import org.springboot.lifecare.user.entity.UserRank;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,11 +25,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class UserBiz implements UserDetailsService {
@@ -54,34 +55,67 @@ public class UserBiz implements UserDetailsService {
     }
 
     public ResponseEntity<?> register(UserCreationDTO userDTO) {
+        if (userDAO.existsById(Integer.valueOf(userDTO.getId()))) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID is already taken");
+        if (userDAO.existsByEmail(userDTO.getEmail())) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email is already taken");
+
+        List<String> combs = List.of("012", "123", "234",
+                "345", "456", "567", "678", "789", "890", "987", "876",
+                "765", "654", "543", "432", "321", "210");
+
+        for (String comb : combs) {
+            if (userDTO.getPassword().contains(comb)) {
+                HashMap<String, String> temp = new HashMap<>();
+
+                temp.put("defaultMessage", "Password contains consecutive numbers");
+
+                return ResponseEntity.badRequest()
+                        .body(List.of(temp));
+            }
+        }
+
         User user = new User(
-                userDTO.getId(), userDTO.getName(), userDTO.getEmail(),
+                Integer.valueOf(userDTO.getId()), userDTO.getName(), userDTO.getEmail(),
                 passwordEncoder.encode(userDTO.getPassword()),
-                userDTO.getPhoneNo(), UserRank.BRONZE);
-        Role role = new Role(RoleName.USER);
-        user.setRoles(Collections.singletonList(role));
-        String token = getToken(user, Collections.singletonList(role.getRoleName()));
+                Long.valueOf(userDTO.getPhoneNo()), UserRank.BRONZE);
         userDAO.save(user);
-        return new ResponseEntity<>("Bearer " + token, HttpStatus.SEE_OTHER);
+        return ResponseEntity.ok("User registered successfully");
     }
 
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
-        return userDAO.findById(Integer.parseInt(id)).orElseThrow(() -> new UsernameNotFoundException("Id not found"));
+        Pattern pattern = Pattern.compile("^[0-9]{3,}$");
+        Matcher matcher = pattern.matcher(id);
+        if (matcher.matches())
+            return userDAO.findById(Integer.parseInt(id)).orElseThrow(() -> new UsernameNotFoundException("Id not found"));
+        else
+            return userDAO.findByEmail(id).orElseThrow(() -> new UsernameNotFoundException("Email not found"));
     }
 
-    public String authenticate(UserDTO userDTO) {
+    public ResponseEntity<?> authenticate(UserDTO userDTO) {
+        boolean useEmail = false;
+        Pattern pattern = Pattern.compile("^[0-9]{3,}$");
+        Matcher matcher = pattern.matcher(userDTO.getCred());
+        if (!matcher.matches()) {
+            useEmail = true;
+        }
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        userDTO.getId(),
+                        userDTO.getCred(),
                         userDTO.getPassword()
                 )
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        User user = userDAO.findById(userDTO.getId()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        User user;
+        if (useEmail) {
+            user = userDAO.findByEmail(userDTO.getCred()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        } else {
+            user = userDAO.findById(Integer.valueOf(userDTO.getCred())).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        }
+
         List<String> rolesNames = new ArrayList<>();
         user.getRoles().forEach(r -> rolesNames.add(r.getRoleName()));
-        return getToken(user, rolesNames);
+        return ResponseEntity.ok(getToken(user, rolesNames));
     }
 
     private String getToken(User user, List<String> rolesNames) {
@@ -93,5 +127,26 @@ public class UserBiz implements UserDetailsService {
                 .expiration(Date.from(Instant.now().plusMillis(expiration)))
                 .signWith(key)
                 .compact();
+    }
+
+    public ResponseEntity<?> inquireUsers(InquiryRequestDTO requestDTO) throws ParseException {
+        Pageable pageable = PageRequest.of(requestDTO.getPage(), requestDTO.getSize());
+        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+        Date jf = formatter.parse(requestDTO.getJoinFrom());
+        Date jt = formatter.parse(requestDTO.getJoinTo());
+        formatter.applyPattern("yyyy-MM-dd");
+        String joinFrom = formatter.format(jf);
+        String joinTo = formatter.format(jt);
+        Page<User> result = userDAO.findAllUsersWithParams(
+                requestDTO.getId(), requestDTO.getUsername(),
+                requestDTO.getPhoneNo(), joinFrom, joinTo, pageable);
+        List<InquiryResponseDTO> responseDTOList = new ArrayList<>();
+        result.getContent().forEach(user -> {
+            InquiryResponseDTO responseDTO = new InquiryResponseDTO(user.getUserNo(), user.getId(), user.getUsername(),
+                    user.getPhoneNo(), user.getEmail(), user.getJoinDate().toString());
+            responseDTOList.add(responseDTO);
+        });
+        InquiryResponseListDTO response = new InquiryResponseListDTO(responseDTOList, result.getTotalPages());
+        return ResponseEntity.ok().body(response);
     }
 }

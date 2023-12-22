@@ -5,32 +5,31 @@ import TextInput from "./TextInput";
 import Instance from "../axios/instance";
 
 const loginSchema = Yup.object().shape({
-  id: Yup.string()
+  cred: Yup.string()
     .min(4, "Email or ID has to be 4 or more letters")
     .required("Email or ID is required"),
   password: Yup.string().required("Password is required"),
 });
 
 const initialValues = {
-    id: "",
-    password: "",
-    remember: false,
-  }
+  cred: "",
+  password: "",
+  remember: false,
+};
 
 const LoginForm = () => {
-
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={loginSchema}
       onSubmit={(values) => {
-        Instance.post('/login', values).then(console.log)
+        Instance.post("/login", values).then(console.log);
       }}
     >
       {() => (
         <Form>
           <TextInput
-            name="id"
+            name="cred"
             label="Email or ID"
             placeholder="Email or ID"
             type="text"
