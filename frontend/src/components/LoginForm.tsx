@@ -22,8 +22,8 @@ const LoginForm = () => {
     <Formik
       initialValues={initialValues}
       validationSchema={loginSchema}
-      onSubmit={(values) => {
-        Instance.post("/login", values).then(console.log);
+      onSubmit={async (values) => {
+        await Instance.post("/login", values).then(console.log);
       }}
     >
       {() => (

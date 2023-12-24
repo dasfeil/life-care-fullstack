@@ -5,7 +5,7 @@ import { useFormikContext } from "formik";
 import BackButtonSVG from "../svgs/BackButtonSVG";
 
 const DetailForm = ({ handleBack }: Props) => {
-  const { submitForm, errors } = useFormikContext<{
+  const { submitForm, errors, setFieldValue } = useFormikContext<{
     name: String;
     phoneNo: String;
     email: String;
@@ -21,8 +21,6 @@ const DetailForm = ({ handleBack }: Props) => {
   ];
 
   const [dropdown, setDropdown] = useState(false);
-
-  const [domain, setDomain] = useState("");
 
   const [domainSelected, setDomainSelected] = useState(false);
 
@@ -60,10 +58,6 @@ const DetailForm = ({ handleBack }: Props) => {
           label=""
           type="text"
           name="emailDomain"
-          value={domain}
-          onInput={(event: React.ChangeEvent<HTMLInputElement>) =>
-            setDomain((state) => (state = event.target.value))
-          }
           disabled={domainSelected}
           placeholder=""
           disableError
@@ -101,7 +95,7 @@ const DetailForm = ({ handleBack }: Props) => {
                     key={option}
                     onClick={() => {
                       setDomainSelected(true);
-                      setDomain(option);
+                      setFieldValue("emailDomain", option);
                     }}
                   >
                     {option}
@@ -111,7 +105,7 @@ const DetailForm = ({ handleBack }: Props) => {
                   className="block px-4 py-2 hover:bg-gray-100"
                   onClick={() => {
                     setDomainSelected(false);
-                    setDomain("");
+                    setFieldValue("emailDomain", "");
                   }}
                 >
                   --OTHER--
@@ -132,6 +126,7 @@ const DetailForm = ({ handleBack }: Props) => {
         )}
       </div>
       <PillButton
+        type="button"
         styleType="none"
         onClick={submitForm}
         text="Sign Up"

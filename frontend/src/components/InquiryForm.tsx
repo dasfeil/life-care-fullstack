@@ -4,6 +4,7 @@ import TextInput from "./TextInput";
 import Instance from "../axios/instance";
 import DateInput from "./DateInput";
 import { useEffect, useState } from "react";
+import ReactPaginate from "react-paginate";
 
 const inquirySchema = Yup.object().shape({
   id: Yup.string()
@@ -42,7 +43,9 @@ const InquiryForm = () => {
 
   const [data, setData] = useState<data[]>();
 
-  const [page, setPage] = useState(0);
+  const currentPage = 0;
+
+  const [totalPage, setTotalPage] = useState(0);
 
   const pageSize = 5;
 
@@ -53,8 +56,23 @@ const InquiryForm = () => {
     joinFrom: baseDateString,
     joinTo: currentDateString,
   };
+
+  const inquire = async (page) => {
+    return Instance.post("/manage/inquiry", {
+      ...initialValues,
+      page: page,
+      size: pageSize,
+    })
+      .then((res) => res.data)
+      .then((data) => {
+        setData(data.userList);
+        setTotalPage(data.pages);
+      })
+      .catch((error) => console.log(error));
+  };
+
   useEffect(() => {
-    Instance.post("/manage/inquiry", {...initialValues});
+    inquire(0);
   }, []);
 
   return (
@@ -65,7 +83,7 @@ const InquiryForm = () => {
         onSubmit={(values) => {
           Instance.post("/manage/inquiry", {
             ...values,
-            page: page,
+            page: currentPage,
             size: pageSize,
           });
         }}
@@ -105,9 +123,9 @@ const InquiryForm = () => {
                 <DateInput label="From:" name="joinFrom" />
                 <DateInput label="To:" name="joinTo" />
               </div>
-              <div className="col-span-2 col-start-2 flex justify-between mx-2">
+              <div className="mx-2 col-end-4 flex justify-end">
                 <button
-                  type="submit"
+                  type="button"
                   className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg px-5 py-2.5 me-2 mb-2"
                 >
                   Inquiry
@@ -123,44 +141,71 @@ const InquiryForm = () => {
           </Form>
         )}
       </Formik>
-      <div className="w-full border border-1">
-        <div className="relative overflow-x-auto shadow-md rounded-lg">
-          <table className="w-full text-sm text-left rtl:text-right text-gray-500">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-              <tr>
-                <th scope="col" className="px-6 py-3">
-                  Membership Number
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  ID
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Name
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Phone Number
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Email
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Join date
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="odd:bg-white even:bg-gray-50 border-b">
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-                >
-                  Bruh
-                </th>
-                <td className="px-6 py-4">Silver</td>
-              </tr>
-            </tbody>
-          </table>
+      <div className="w-full">
+        <div className="border border-1 mx-1">
+          <div className="relative overflow-x-auto shadow-md rounded-lg">
+            <table className="w-full text-sm text-left rtl:text-right text-gray-500">
+              <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                <tr>
+                  <th scope="col" className="px-6 py-3">
+                    Membership Number
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    ID
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Name
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Phone Number
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Email
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Join date
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {data &&
+                  data.map((data) => (
+                    <tr
+                      className="odd:bg-white even:bg-gray-50 border-b"
+                      key={data.userNo}
+                    >
+                      <th
+                        scope="row"
+                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                      >
+                        {data.userNo}
+                      </th>
+                      <td className="px-6 py-4">{data.id}</td>
+                      <td className="px-6 py-4">{data.username}</td>
+                      <td className="px-6 py-4">{data.phoneNo}</td>
+                      <td className="px-6 py-4">{data.email}</td>
+                      <td className="px-6 py-4">{data.joinDate}</td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
         </div>
+        <ReactPaginate
+          breakLabel="..."
+          nextLabel="next >"
+          onPageChange={({ selected }) => {
+            inquire(selected);
+          }}
+          pageRangeDisplayed={pageSize}
+          pageCount={totalPage}
+          previousLabel="< previous"
+          renderOnZeroPageCount={null}
+          containerClassName="inline-flex -space-x-px text-sm"
+          pageLinkClassName="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
+          previousLinkClassName="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700"
+          nextLinkClassName="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700"
+        />
       </div>
     </>
   );

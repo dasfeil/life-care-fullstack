@@ -31,6 +31,7 @@ import java.time.Instant;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 public class UserBiz implements UserDetailsService {
@@ -131,21 +132,11 @@ public class UserBiz implements UserDetailsService {
 
     public ResponseEntity<?> inquireUsers(InquiryRequestDTO requestDTO) throws ParseException {
         Pageable pageable = PageRequest.of(requestDTO.getPage(), requestDTO.getSize());
-        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-        Date jf = formatter.parse(requestDTO.getJoinFrom());
-        Date jt = formatter.parse(requestDTO.getJoinTo());
-        formatter.applyPattern("yyyy-MM-dd");
-        String joinFrom = formatter.format(jf);
-        String joinTo = formatter.format(jt);
-        Page<User> result = userDAO.findAllUsersWithParams(
+        Page<InquiryResponseDTO> result = userDAO.findAllUsersWithParams(
                 requestDTO.getId(), requestDTO.getUsername(),
-                requestDTO.getPhoneNo(), joinFrom, joinTo, pageable);
-        List<InquiryResponseDTO> responseDTOList = new ArrayList<>();
-        result.getContent().forEach(user -> {
-            InquiryResponseDTO responseDTO = new InquiryResponseDTO(user.getUserNo(), user.getId(), user.getUsername(),
-                    user.getPhoneNo(), user.getEmail(), user.getJoinDate().toString());
-            responseDTOList.add(responseDTO);
-        });
+                requestDTO.getPhoneNo(), requestDTO.getJoinFrom(),
+                requestDTO.getJoinTo(), pageable);
+        List<InquiryResponseDTO> responseDTOList = result.getContent().stream().toList();
         InquiryResponseListDTO response = new InquiryResponseListDTO(responseDTOList, result.getTotalPages());
         return ResponseEntity.ok().body(response);
     }

@@ -6,11 +6,13 @@ import Root from "./routes/Root";
 import Login from "./routes/Login";
 import SignUp from "./routes/SignUp";
 import MemberInquiry from "./routes/MemberInquiry";
+import Error from "./routes/Error";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
+    errorElement: <Error/>,
     children: [
       {
         path: "login",

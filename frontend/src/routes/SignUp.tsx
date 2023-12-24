@@ -1,10 +1,13 @@
 import * as Yup from "yup";
-import { Form } from "react-router-dom";
+import { Form, Navigate } from "react-router-dom";
 import { useState } from "react";
 import { Formik, FormikHelpers, FormikValues } from "formik";
 import IDForm from "../components/signUpForms/IDForm";
 import PasswordForm from "../components/signUpForms/PasswordForm";
 import DetailForm from "../components/signUpForms/DetailForm";
+import Instance from "../axios/instance";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const signUpSchema = [
   Yup.object().shape({
@@ -58,7 +61,6 @@ const signUpSchema = [
             tempValue.forEach((element) => {
               combs.forEach((comb) => {
                 if (element.toString().includes(comb)) {
-                  console.log(comb);
                   valid = false;
                 }
               });
@@ -111,7 +113,7 @@ function renderFormStep(step: number, handleBack: Function) {
     case 2:
       return <DetailForm handleBack={handleBack} />;
     default:
-      return <div>Not Found</div>;
+      return <Navigate to={"/login"} />;
   }
 }
 
@@ -119,6 +121,7 @@ const steps = 2;
 
 export default function SignUp() {
   const [step, setStep] = useState(0);
+  const [errorMsg, setErrorMsg] = useState("");
   const currentSchema = signUpSchema[step];
   const lastStep = step === steps;
 
@@ -127,11 +130,21 @@ export default function SignUp() {
     actions: FormikHelpers<typeof initialValues>
   ) => {
     if (lastStep) {
-      console.log(values);
+      const { email, emailDomain, ...rest } = values;
+      const requestBody = { email: email + "@" + emailDomain, ...rest };
+      await Instance.post("/sign-up", requestBody)
+        .then(() => {
+          toast("Sign-up successful");
+          setStep(3);
+        })
+        .catch((err: string) => {
+          setErrorMsg(err);
+          setStep(0);
+        });
     } else {
-      setStep((state) => state + 1);
-      actions.setTouched({});
       actions.setSubmitting(false);
+      actions.setTouched({});
+      setStep((state) => state + 1);
     }
   };
 
@@ -140,22 +153,25 @@ export default function SignUp() {
   };
 
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={currentSchema}
-      onSubmit={async (values, helpers) => {
-        helpers.validateForm().then(() => {
-          handleSubmit(values, helpers);
-        });
-      }}
-      validateOnBlur={false}
-      validateOnChange={false}
-    >
-      {() => (
-        <Form className="mt-24 min-h-screen flex flex-col items-center">
-          {renderFormStep(step, handleBack)}
-        </Form>
-      )}
-    </Formik>
+    <>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={currentSchema}
+        onSubmit={async (values, helpers) => {
+          helpers.validateForm().then(() => {
+            handleSubmit(values, helpers);
+          });
+        }}
+        validateOnBlur={false}
+        validateOnChange={false}
+      >
+        {() => (
+          <Form className="mt-24 min-h-screen flex flex-col items-center">
+            {errorMsg && <p className="text-red-500">{errorMsg}</p>}
+            {renderFormStep(step, handleBack)}
+          </Form>
+        )}
+      </Formik>
+    </>
   );
 }

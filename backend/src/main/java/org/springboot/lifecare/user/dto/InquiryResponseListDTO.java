@@ -8,6 +8,6 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class InquiryResponseListDTO {
-    private List<InquiryResponseDTO> responseDTOList;
+    private List<InquiryResponseDTO> userList;
     private int pages;
 }

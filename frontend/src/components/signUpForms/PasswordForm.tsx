@@ -3,12 +3,12 @@ import TextInput from "../TextInput";
 import { useFormikContext } from "formik";
 import BackButtonSVG from "../svgs/BackButtonSVG";
 
-const PasswordForm = ({ handleBack}: Props) => {
+const PasswordForm = ({ handleBack }: Props) => {
   const { submitForm } = useFormikContext();
   return (
     <div>
       <div className="flex h-12 items-center gap-2">
-        <BackButtonSVG width={20} height={32} onClick={() => handleBack()}/>
+        <BackButtonSVG width={20} height={32} onClick={() => handleBack()} />
         <p className="">Create a password</p>
       </div>
       <TextInput
@@ -35,6 +35,7 @@ const PasswordForm = ({ handleBack}: Props) => {
         className="w-[20rem]"
       />
       <PillButton
+        type="button"
         styleType="none"
         onClick={submitForm}
         text="Continue"

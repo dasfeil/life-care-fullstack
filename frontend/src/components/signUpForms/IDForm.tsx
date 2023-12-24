@@ -15,6 +15,7 @@ const IDForm = () => {
         className="w-[20rem]"
       />
       <PillButton
+        type="button"
         styleType="none"
         onClick={submitForm}
         text="Continue"
