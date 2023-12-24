@@ -5,15 +5,19 @@ import {
   useRouteError,
 } from "react-router-dom";
 
-export default function Error() {
+export default function ErrorRoute() {
   let error = useRouteError();
   let errorRes = false;
   let errorMessage: string;
   if (isRouteErrorResponse(error)) {
     errorRes = true;
     errorMessage = error.statusText;
+  } else if (error instanceof Error) {
+    errorMessage = error.message;
+  } else if (typeof error === 'string') {
+    errorMessage = error;
   } else {
-    errorMessage = "Unknown error occurred";
+    errorMessage = 'Unknown error';
   }
   return (
     <>

@@ -1,13 +1,13 @@
 import * as Yup from "yup";
 import { Form, Navigate } from "react-router-dom";
 import { useState } from "react";
-import { Formik, FormikHelpers, FormikValues } from "formik";
+import { Formik, FormikHelpers } from "formik";
 import IDForm from "../components/signUpForms/IDForm";
 import PasswordForm from "../components/signUpForms/PasswordForm";
 import DetailForm from "../components/signUpForms/DetailForm";
-import Instance from "../axios/instance";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { handleSignUp } from "../axios/instance";
 
 const signUpSchema = [
   Yup.object().shape({
@@ -126,13 +126,13 @@ export default function SignUp() {
   const lastStep = step === steps;
 
   const handleSubmit = async (
-    values: FormikValues,
+    values: typeof initialValues,
     actions: FormikHelpers<typeof initialValues>
   ) => {
     if (lastStep) {
       const { email, emailDomain, ...rest } = values;
       const requestBody = { email: email + "@" + emailDomain, ...rest };
-      await Instance.post("/sign-up", requestBody)
+      await handleSignUp(requestBody)
         .then(() => {
           toast("Sign-up successful");
           setStep(3);

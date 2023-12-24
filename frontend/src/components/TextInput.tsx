@@ -46,7 +46,7 @@ const TextInput = ({
 
 type Props = ComponentProps<"input"> &
   FieldHookConfig<string> & {
-    label: string;
+    label?: string;
     disableError?: boolean
   };
 export default TextInput;

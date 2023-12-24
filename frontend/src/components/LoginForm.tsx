@@ -2,7 +2,7 @@ import { Field, Form, Formik } from "formik";
 import PillButton from "./PillButton";
 import * as Yup from "yup";
 import TextInput from "./TextInput";
-import Instance from "../axios/instance";
+import { handleLogin } from "../axios/instance";
 
 const loginSchema = Yup.object().shape({
   cred: Yup.string()
@@ -23,7 +23,7 @@ const LoginForm = () => {
       initialValues={initialValues}
       validationSchema={loginSchema}
       onSubmit={async (values) => {
-        await Instance.post("/login", values).then(console.log);
+        await handleLogin(values);
       }}
     >
       {() => (
