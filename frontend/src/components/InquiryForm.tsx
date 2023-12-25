@@ -22,10 +22,10 @@ const inquirySchema = Yup.object().shape({
 type Props = {
   initialValues: data;
   handleSubmit: Function;
-  toExcel: Function;
+  showExcel: Function;
 };
 
-const InquiryForm = ({ initialValues, handleSubmit, toExcel }: Props) => {
+const InquiryForm = ({ initialValues, handleSubmit, showExcel }: Props) => {
   return (
     <>
       <Formik
@@ -75,7 +75,7 @@ const InquiryForm = ({ initialValues, handleSubmit, toExcel }: Props) => {
                   Inquiry
                 </button>
                 <button
-                  onClick={() => toExcel()}
+                  onClick={() => showExcel()}
                   type="button"
                   className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg px-5 py-2.5 mb-2"
                 >
