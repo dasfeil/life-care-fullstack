@@ -1,8 +1,8 @@
 import axios from "axios";
-import { formData as data, loginData, signUpData } from "../types";
+import { formData as data, inquiryAllDataRequest, loginData, signUpData } from "../types";
 
 const Instance = axios.create({
-    baseURL: 'http://localhost:8080'
+    baseURL: 'http://localhost:8080/api/v1'
 });
 
 Instance.interceptors.request.use((request) => {
@@ -35,12 +35,16 @@ export function handleSignUp(data: signUpData) {
     return Instance.post("/sign-up", data)
 }
 
-export const handleInquiry = async (data: data, page: Number, pageSize: number) => {
+export const handleInquiryPagination = async (data: data, page: Number, pageSize: number) => {
     return Instance.post("/manage/inquiry", {
         ...data,
         page: page,
         size: pageSize,
     })
 };
+
+export const handleInquiryAll = async (data: inquiryAllDataRequest) => {
+    return Instance.post("/manage/inquiry/all", data)
+}
 
 export default Instance
