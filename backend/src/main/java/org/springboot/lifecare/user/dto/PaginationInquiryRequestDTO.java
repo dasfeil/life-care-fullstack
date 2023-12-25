@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class InquiryRequestDTO {
+public class PaginationInquiryRequestDTO {
     private String id;
     private String phoneNo;
     private String username;
