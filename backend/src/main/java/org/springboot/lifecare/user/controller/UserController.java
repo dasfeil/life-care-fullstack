@@ -33,11 +33,6 @@ public class UserController {
         return userBiz.authenticate(userDTO);
     }
 
-    @GetMapping("/refresh")
-    public String refreshToken(@RequestBody RefreshTokenDTO refreshTokenDTO) {
-        return "bruh";
-    }
-
     @PostMapping("/manage/inquiry")
     public ResponseEntity<?> returnInquiry(@Valid @RequestBody PaginationInquiryRequestDTO paginationInquiryRequestDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {

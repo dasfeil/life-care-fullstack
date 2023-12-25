@@ -33,7 +33,6 @@ import java.util.regex.Pattern;
 @Service
 public class UserBiz implements UserDetailsService {
     private final UserDAO userDAO;
-
     private final AuthenticationManager authenticationManager;
 
     private final PasswordEncoder passwordEncoder;
@@ -113,16 +112,19 @@ public class UserBiz implements UserDetailsService {
 
         List<String> rolesNames = new ArrayList<>();
         user.getRoles().forEach(r -> rolesNames.add(r.getRoleName()));
-        return ResponseEntity.ok(getToken(user, rolesNames));
+        JwtResponse jwtResponse = new JwtResponse(getToken(user, rolesNames, userDTO.isRemember()),
+                user.getUserNo(), user.getUsername(), user.getEmail(), rolesNames);
+        return ResponseEntity.ok(jwtResponse);
     }
 
-    private String getToken(User user, List<String> rolesNames) {
+    private String getToken(User user, List<String> rolesNames, Boolean remember) {
+        long expireMs = remember? 2629800000L : expiration;
         SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
         return Jwts.builder()
                 .subject(user.getUsername())
                 .claim("role", rolesNames)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(Date.from(Instant.now().plusMillis(expiration)))
+                .expiration(Date.from(Instant.now().plusMillis(expireMs)))
                 .signWith(key)
                 .compact();
     }
