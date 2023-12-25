@@ -3,7 +3,8 @@ import PillButton from "./PillButton";
 import * as Yup from "yup";
 import TextInput from "./TextInput";
 import { handleLogin } from "../axios/instance";
-
+import Cookies from "js-cookie";
+import { toast } from "react-toastify";
 const loginSchema = Yup.object().shape({
   cred: Yup.string()
     .min(4, "Email or ID has to be 4 or more letters")
@@ -23,7 +24,10 @@ const LoginForm = () => {
       initialValues={initialValues}
       validationSchema={loginSchema}
       onSubmit={async (values) => {
-        await handleLogin(values);
+        await handleLogin(values).then((res) => {
+          toast("Login Succeed");
+          Cookies.set("token", JSON.stringify(res.data));
+        });
       }}
     >
       {() => (
