@@ -25,13 +25,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Service
 public class UserBiz implements UserDetailsService {
@@ -130,14 +127,21 @@ public class UserBiz implements UserDetailsService {
                 .compact();
     }
 
-    public ResponseEntity<?> inquireUsers(InquiryRequestDTO requestDTO) throws ParseException {
+    public ResponseEntity<?> inquireUsers(PaginationInquiryRequestDTO requestDTO) {
         Pageable pageable = PageRequest.of(requestDTO.getPage(), requestDTO.getSize());
-        Page<InquiryResponseDTO> result = userDAO.findAllUsersWithParams(
+        Page<InquiryResponseDTO> result = userDAO.findPaginatedUsersWithParams(
                 requestDTO.getId(), requestDTO.getUsername(),
                 requestDTO.getPhoneNo(), requestDTO.getJoinFrom(),
                 requestDTO.getJoinTo(), pageable);
         List<InquiryResponseDTO> responseDTOList = result.getContent().stream().toList();
-        InquiryResponseListDTO response = new InquiryResponseListDTO(responseDTOList, result.getTotalPages());
+        PaginationInquiryResponseListDTO response = new PaginationInquiryResponseListDTO(responseDTOList, result.getTotalPages());
         return ResponseEntity.ok().body(response);
+    }
+
+    public ResponseEntity<?> getAllUsersWithParams(AllInquiryRequestDTO requestDTO) {
+        List<InquiryResponseDTO> result = userDAO.findAllUsersWithParams(
+                requestDTO.getId(), requestDTO.getUsername(), requestDTO.getPhoneNo()
+        );
+        return ResponseEntity.ok().body(result);
     }
 }

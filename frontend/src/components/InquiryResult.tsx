@@ -8,7 +8,7 @@ export default function InquiryResult({ data }: Props) {
   return (
     <>
       <div className="w-full md:w-[90%]">
-        <div className="border border-1 mx-1">
+        <div className="border border-1 mx-1 rounded-md">
           <div className="relative overflow-x-auto shadow-md rounded-lg">
             <table className="w-full text-sm text-left rtl:text-right text-gray-500">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50">

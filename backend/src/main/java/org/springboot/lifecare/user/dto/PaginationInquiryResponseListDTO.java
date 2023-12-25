@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class InquiryResponseListDTO {
+public class PaginationInquiryResponseListDTO {
     private List<InquiryResponseDTO> userList;
     private int pages;
 }

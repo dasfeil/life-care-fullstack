@@ -7,7 +7,7 @@ export default function Root() {
   return (
     <div className="h-screen">
       <div className="bg-black border-gray-900 ">
-        <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4">
+        <div className="flex flex-wrap justify-between items-center mx-auto w-screen-xl p-4">
           <Link
             className="text-white self-center text-2xl font-semibold whitespace-nowrap"
             to="/"

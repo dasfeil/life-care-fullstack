@@ -6,17 +6,12 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springboot.lifecare.user.biz.UserBiz;
 import org.springboot.lifecare.user.dto.*;
-import org.springboot.lifecare.user.entity.User;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.ParseException;
-import java.util.List;
-
 @RestController
-@RequestMapping
+@RequestMapping("/api/v1")
 @Slf4j
 @RequiredArgsConstructor
 public class UserController {
@@ -44,7 +39,15 @@ public class UserController {
     }
 
     @PostMapping("/manage/inquiry")
-    public ResponseEntity<?> returnInquiry(@Valid @RequestBody InquiryRequestDTO inquiryRequestDTO, BindingResult bindingResult) throws ParseException {
-        return userBiz.inquireUsers(inquiryRequestDTO);
+    public ResponseEntity<?> returnInquiry(@Valid @RequestBody PaginationInquiryRequestDTO paginationInquiryRequestDTO, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+        }
+        return userBiz.inquireUsers(paginationInquiryRequestDTO);
+    }
+
+    @PostMapping("/manage/inquiry/all")
+    public ResponseEntity<?> getAllData(@Valid @RequestBody AllInquiryRequestDTO allInquiryRequestDTO) {
+        return userBiz.getAllUsersWithParams(allInquiryRequestDTO);
     }
 }

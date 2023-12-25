@@ -1,8 +1,13 @@
 package org.springboot.lifecare.user.dto;
 
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.sql.Date;
 
+@Setter
+@Getter
 public class InquiryResponseDTO {
     private long userNo;
     private int id;
@@ -18,54 +23,6 @@ public class InquiryResponseDTO {
         this.phoneNo = phoneNo;
         this.email = email;
         this.joinDate = joinDate.toString();
-    }
-
-    public long getUserNo() {
-        return this.userNo;
-    }
-
-    public int getId() {
-        return this.id;
-    }
-
-    public String getUsername() {
-        return this.username;
-    }
-
-    public long getPhoneNo() {
-        return this.phoneNo;
-    }
-
-    public String getEmail() {
-        return this.email;
-    }
-
-    public String getJoinDate() {
-        return this.joinDate;
-    }
-
-    public void setUserNo(long userNo) {
-        this.userNo = userNo;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPhoneNo(long phoneNo) {
-        this.phoneNo = phoneNo;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setJoinDate(String joinDate) {
-        this.joinDate = joinDate;
     }
 
     public boolean equals(final Object o) {

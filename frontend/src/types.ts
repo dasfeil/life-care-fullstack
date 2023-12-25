@@ -12,7 +12,14 @@ export type inquiryData = {
     username: string,
     phoneNo: number,
     email: string,
-    joinDate: string
+    joinDate: string,
+    [key: string]: unknown
+}
+
+export type inquiryAllDataRequest = {
+    id: string,
+    username: string,
+    phoneNo: string
 }
 
 export type signUpData = {
