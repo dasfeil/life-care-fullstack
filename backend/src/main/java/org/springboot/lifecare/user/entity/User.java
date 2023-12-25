@@ -1,11 +1,9 @@
 package org.springboot.lifecare.user.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,18 +16,19 @@ import java.util.List;
 
 @Entity(name = "USER")
 @Table(indexes = @Index(columnList = "id, username"), uniqueConstraints = {@UniqueConstraint(columnNames = {"user_no"})})
-@Getter @Setter
-@RequiredArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
+@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User implements Serializable, UserDetails {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userNo;
 
     @NonNull
     @Column(unique = true, nullable = false)
-    private Integer id;
+    private String id;
 
     @NonNull
     @Column(nullable = false)
@@ -45,7 +44,7 @@ public class User implements Serializable, UserDetails {
 
     @NonNull
     @Column(nullable = false)
-    private Long phoneNo;
+    private String phoneNo;
 
     @Temporal(TemporalType.DATE)
     @CreationTimestamp
@@ -56,7 +55,8 @@ public class User implements Serializable, UserDetails {
     private UserRank userRank;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    private List<Role> roles;
+    @JoinTable(name="user_roles", joinColumns = @JoinColumn(name="user_no"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private List<Role> roles = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

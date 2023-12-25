@@ -3,8 +3,11 @@ package org.springboot.lifecare.user.biz;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springboot.lifecare.user.dao.RoleDAO;
 import org.springboot.lifecare.user.dao.UserDAO;
 import org.springboot.lifecare.user.dto.*;
+import org.springboot.lifecare.user.entity.Role;
+import org.springboot.lifecare.user.entity.RoleName;
 import org.springboot.lifecare.user.entity.User;
 import org.springboot.lifecare.user.entity.UserRank;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +36,8 @@ import java.util.regex.Pattern;
 @Service
 public class UserBiz implements UserDetailsService {
     private final UserDAO userDAO;
+
+    private final RoleDAO roleDAO;
     private final AuthenticationManager authenticationManager;
 
     private final PasswordEncoder passwordEncoder;
@@ -45,14 +50,16 @@ public class UserBiz implements UserDetailsService {
 
     public UserBiz(UserDAO userDAO,
                    @Lazy AuthenticationManager authenticationManager,
-                   @Lazy PasswordEncoder passwordEncoder) {
+                   @Lazy PasswordEncoder passwordEncoder,
+                   RoleDAO roleDAO) {
         this.userDAO = userDAO;
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
+        this.roleDAO = roleDAO;
     }
 
     public ResponseEntity<?> register(UserCreationDTO userDTO) {
-        if (userDAO.existsById(Integer.valueOf(userDTO.getId()))) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID is already taken");
+        if (userDAO.existsById(userDTO.getId())) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID is already taken");
         if (userDAO.existsByEmail(userDTO.getEmail())) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email is already taken");
 
         List<String> combs = List.of("012", "123", "234",
@@ -71,9 +78,10 @@ public class UserBiz implements UserDetailsService {
         }
 
         User user = new User(
-                Integer.valueOf(userDTO.getId()), userDTO.getName(), userDTO.getEmail(),
+                userDTO.getId(), userDTO.getName(), userDTO.getEmail(),
                 passwordEncoder.encode(userDTO.getPassword()),
-                Long.valueOf(userDTO.getPhoneNo()), UserRank.BRONZE);
+                userDTO.getPhoneNo(), UserRank.BRONZE);
+        user.setRoles(List.of(roleDAO.findByRoleName(RoleName.USER)));
         userDAO.save(user);
         return ResponseEntity.ok("User registered successfully");
     }
@@ -83,7 +91,7 @@ public class UserBiz implements UserDetailsService {
         Pattern pattern = Pattern.compile("^[0-9]{3,}$");
         Matcher matcher = pattern.matcher(id);
         if (matcher.matches())
-            return userDAO.findById(Integer.parseInt(id)).orElseThrow(() -> new UsernameNotFoundException("Id not found"));
+            return userDAO.findById(id).orElseThrow(() -> new UsernameNotFoundException("Id not found"));
         else
             return userDAO.findByEmail(id).orElseThrow(() -> new UsernameNotFoundException("Email not found"));
     }
@@ -107,7 +115,7 @@ public class UserBiz implements UserDetailsService {
         if (useEmail) {
             user = userDAO.findByEmail(userDTO.getCred()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         } else {
-            user = userDAO.findById(Integer.valueOf(userDTO.getCred())).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            user = userDAO.findById(userDTO.getCred()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         }
 
         List<String> rolesNames = new ArrayList<>();

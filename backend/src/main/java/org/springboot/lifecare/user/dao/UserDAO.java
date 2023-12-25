@@ -17,18 +17,18 @@ import java.util.Optional;
 @Repository
 public interface UserDAO extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
-    Optional<User> findById(Integer id);
+    Optional<User> findById(String id);
 
-    boolean existsById(Integer id);
+    boolean existsById(String id);
 
     boolean existsByEmail(String email);
 
     @Query("select new " +
             "org.springboot.lifecare.user.dto.InquiryResponseDTO(u.userNo, u.id, u.username, u.phoneNo, u.email, u.joinDate) " +
             "from USER u " +
-            "where cast(u.id as string) like %:id% " +
+            "where u.id like %:id% " +
             "and lower(u.username) like lower(concat('%', :username, '%')) " +
-            "and cast(u.phoneNo as string) like %:phoneNo% " +
+            "and u.phoneNo like %:phoneNo% " +
             "and u.joinDate >= cast(:joinFrom as localdate) " +
             "and u.joinDate <= cast(:joinTo as localdate)")
     Page<InquiryResponseDTO> findPaginatedUsersWithParams(@Param("id") String id, @Param("username") String username, @Param("phoneNo") String phoneNo,
@@ -37,9 +37,9 @@ public interface UserDAO extends JpaRepository<User, Long> {
     @Query("select new " +
             "org.springboot.lifecare.user.dto.InquiryResponseDTO(u.userNo, u.id, u.username, u.phoneNo, u.email, u.joinDate) " +
             "from USER u " +
-            "where cast(u.id as string) like %:id% " +
+            "where u.id like %:id% " +
             "and lower(u.username) like lower(concat('%', :username, '%')) " +
-            "and cast(u.phoneNo as string) like %:phoneNo% ")
+            "and u.phoneNo like %:phoneNo% ")
     List<InquiryResponseDTO> findAllUsersWithParams(@Param("id") String id, @Param("username") String username, @Param("phoneNo") String phoneNo);
 }
 
