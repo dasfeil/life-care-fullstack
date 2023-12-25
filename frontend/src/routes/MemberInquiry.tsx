@@ -182,52 +182,54 @@ export default function MemberInquiry() {
                       <span className="sr-only">Close modal</span>
                     </button>
                   </div>
-                  <div className="flex flex-row p-4 md:p-5 space-y-4 items-center">
-                    <span className="text-base leading-relaxed text-gray-500 self-center">
+                  <div className="h-[5rem] grid grid-cols-2 md:grid-cols-3 p-4 md:p-5 space-y-4">
+                    <span className="text-base leading-relaxed text-gray-500 mt-4 self-center">
                       Generate Excel using:
                     </span>
-                    <div className="items-center">
+                    <div className="relative flex items-center">
                       <div
                         onClick={() => setShowExcelData((state) => !state)}
-                        className="relative z-10 py-2.5 px-4 text-sm font-medium text-center text-gray-500 bg-gray-50 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-100"
+                        className="w-fit py-2.5 px-4 text-sm font-medium text-center text-gray-500 bg-gray-50 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-100"
                       >
                         {excelOption === 0 ? "Current Form" : "All Data"}
-                        {showExcelDataOptions && (
-                          <div className="absolute left-0 mt-1 top-full z-10 bg-white divide-y divide-gray-100 w-44">
-                            <ul className="text-sm text-gray-700 rounded-lg shadow">
-                              <li>
-                                <button
-                                  onClick={() => {
-                                    setExcelOption(0);
-                                  }}
-                                  type="button"
-                                  className="inline-flex w-full h-full px-4 py-2 rounded-t-lg text-sm text-gray-700 hover:bg-gray-100"
-                                >
-                                  <div className="inline-flex items-center">
-                                    Current Form
-                                  </div>
-                                </button>
-                              </li>
-                              <li>
-                                <button
-                                  onClick={() => {
-                                    setExcelOption(1);
-                                  }}
-                                  type="button"
-                                  className="inline-flex w-full px-4 py-2 rounded-b-lg text-sm text-gray-700 hover:bg-gray-100"
-                                >
-                                  <div className="inline-flex items-center">
-                                    All Data
-                                  </div>
-                                </button>
-                              </li>
-                            </ul>
-                          </div>
-                        )}
                       </div>
+                      {showExcelDataOptions && (
+                        <div className="absolute left-0 top-full z-10 bg-white divide-y divide-gray-100 w-44">
+                          <ul className="text-sm text-gray-700 rounded-lg shadow">
+                            <li>
+                              <button
+                                onClick={() => {
+                                  setShowExcelData(false);
+                                  setExcelOption(0);
+                                }}
+                                type="button"
+                                className="inline-flex w-full h-full px-4 py-2 rounded-t-lg text-sm text-gray-700 hover:bg-gray-100"
+                              >
+                                <div className="inline-flex items-center">
+                                  Current Form
+                                </div>
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                onClick={() => {
+                                  setShowExcelData(false);
+                                  setExcelOption(1);
+                                }}
+                                type="button"
+                                className="inline-flex w-full px-4 py-2 rounded-b-lg text-sm text-gray-700 hover:bg-gray-100"
+                              >
+                                <div className="inline-flex items-center">
+                                  All Data
+                                </div>
+                              </button>
+                            </li>
+                          </ul>
+                        </div>
+                      )}
                     </div>
                   </div>
-                  <div className="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b">
+                  <div className="mt-5 flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b">
                     <button
                       type="button"
                       onClick={() => toExcel()}
