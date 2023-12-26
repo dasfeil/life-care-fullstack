@@ -26,6 +26,10 @@ Instance.interceptors.response.use(
         if (statusCode === 400) {
             return Promise.reject(error.response.data.messages)
         }
+
+        if (statusCode === null) {
+            return Promise.reject(["Network error"])
+        }
         return Promise.reject(error);
     }
 );

@@ -12,7 +12,7 @@ export default function ErrorFallback({ ...props }: FallbackProps) {
     }
   }, [pathname, props.resetErrorBoundary]);
   return (
-    <div className="grid place-content-center bg-white px-4">
+    <div className="w-full md:w-[40rem] grid place-content-center bg-white px-4 m-auto">
       <div className="text-center">
         <pre className="mt-4 text-gray-500">{props.error.message}</pre>
         <button
