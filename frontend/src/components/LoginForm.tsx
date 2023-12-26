@@ -41,7 +41,9 @@ const LoginForm = () => {
               setAuth({ ...res.data });
               navigate(from, { replace: true });
             })
-            .catch((error: string[]) => setError(error));
+            .catch((error) => {
+              setError(error);
+            });
         }}
       >
         {() => (

@@ -1,24 +1,20 @@
 package org.springboot.lifecare.user.biz;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
+
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springboot.lifecare.common.exception.CustomException;
+import org.springboot.lifecare.common.utils.JwtUtils;
 import org.springboot.lifecare.user.dao.RoleDAO;
 import org.springboot.lifecare.user.dao.UserDAO;
 import org.springboot.lifecare.user.dto.*;
-import org.springboot.lifecare.user.entity.Role;
 import org.springboot.lifecare.user.entity.RoleName;
 import org.springboot.lifecare.user.entity.User;
 import org.springboot.lifecare.user.entity.UserRank;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,8 +26,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.SecretKey;
-import java.time.Instant;
+
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,22 +38,19 @@ public class UserBiz implements UserDetailsService {
     private final RoleDAO roleDAO;
     private final AuthenticationManager authenticationManager;
 
+    private final JwtUtils jwtUtils;
+
     private final PasswordEncoder passwordEncoder;
-
-    @Value("${jwt.secret}")
-    private String secret;
-
-    @Value("${jwt.expiration}")
-    private Long expiration;
 
     public UserBiz(UserDAO userDAO,
                    @Lazy AuthenticationManager authenticationManager,
                    @Lazy PasswordEncoder passwordEncoder,
-                   RoleDAO roleDAO) {
+                   RoleDAO roleDAO, JwtUtils jwtUtils) {
         this.userDAO = userDAO;
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
         this.roleDAO = roleDAO;
+        this.jwtUtils = jwtUtils;
     }
 
     public ResponseEntity<?> register(UserCreationDTO userDTO) {
@@ -116,10 +108,12 @@ public class UserBiz implements UserDetailsService {
 
         List<String> rolesNames = new ArrayList<>();
         user.getRoles().forEach(r -> rolesNames.add(r.getRoleName()));
-        String jwt = getToken(user, rolesNames, userDTO.isRemember());
+
+        String jwt = jwtUtils.generateToken(user, userDTO.isRemember());
         JwtResponse jwtResponse = new JwtResponse(jwt, user.getUserNo(),
                 user.getUsername(), user.getEmail(), rolesNames);
         Cookie cookie = new Cookie("jwt", jwt);
+
         if (userDTO.isRemember()) {
             cookie.setMaxAge(2592000);
         } else {
@@ -130,18 +124,6 @@ public class UserBiz implements UserDetailsService {
         cookie.setSecure(true);
         response.addCookie(cookie);
         return ResponseEntity.ok(jwtResponse);
-    }
-
-    private String getToken(User user, List<String> rolesNames, Boolean remember) {
-        long expireMs = remember? 2592000000L : expiration;
-        SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
-        return Jwts.builder()
-                .subject(user.getId())
-                .claim("role", rolesNames)
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(Date.from(Instant.now().plusMillis(expireMs)))
-                .signWith(key)
-                .compact();
     }
 
     public ResponseEntity<?> inquireUsers(PaginationInquiryRequestDTO requestDTO) {

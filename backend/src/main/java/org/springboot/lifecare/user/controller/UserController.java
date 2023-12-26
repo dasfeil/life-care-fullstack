@@ -48,6 +48,11 @@ public class UserController {
         return userBiz.authenticate(userDTO, response);
     }
 
+    @PostMapping("/authenticate")
+    public ResponseEntity<?> authenticate() {
+        return ResponseEntity.ok("Test");
+    }
+
     @PostMapping("/manage/inquiry")
     @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     public ResponseEntity<?> returnInquiry(@Valid @RequestBody PaginationInquiryRequestDTO paginationInquiryRequestDTO, BindingResult bindingResult) {

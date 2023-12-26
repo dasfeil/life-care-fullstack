@@ -17,10 +17,12 @@ Instance.interceptors.response.use(
     },
     (error) => {
         const statusCode = error.response ? error.response.status : null;
+        console.log(error)
         if (statusCode === 401) {
         }
 
         if (statusCode >= 500) {
+            return Promise.reject(["Internal Server Error"])
         }
 
         if (statusCode === 400) {
