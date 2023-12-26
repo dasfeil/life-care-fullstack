@@ -15,16 +15,19 @@ export default function Root() {
             LifeCare
           </Link>
           <div className="flex items-center space-x-6 rtl:space-x-reverse">
-            <Link
-              to="/login"
-              className="text-sm text-white hover:underline"
-            >
+            <Link to="/login" className="text-sm text-white hover:underline">
               Login
+            </Link>
+            <Link to="/manage/inquiry" className="text-sm text-white hover:underline">
+              Inquiry
+            </Link>
+            <Link to="/user/profile" className="text-sm text-white hover:underline">
+              Profile
             </Link>
           </div>
         </div>
       </div>
-      <div className="min-h-full flex flex-col justify-center">
+      <div className="flex flex-col justify-center">
         <ErrorBoundary FallbackComponent={ErrorFallback}>
           <ToastContainer
             position="top-center"

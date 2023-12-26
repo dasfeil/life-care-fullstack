@@ -1,21 +1,23 @@
 import PillButton from "../components/PillButton";
 import LoginForm from "../components/LoginForm";
 import { Link } from "react-router-dom";
-import Cookies from "js-cookie";
 
 export default function Login() {
-
-  if (Cookies.get("token")) {
-    console.log(Cookies.get("token"))
-  }
-
   return (
     <div className="mt-24 min-h-screen flex flex-col items-center">
       <p className="text-center font-bold text-5xl mb-10">Log in</p>
-      <PillButton styleType="facebook" className="mb-3 hover:bg-[#2f477a]" />
-      <PillButton styleType="google" className="hover:bg-[#dddddd]" />
+      <PillButton
+        styleType="facebook"
+        className="mb-3 hover:bg-[#2f477a]"
+        onClick={() => console.log("Doesn't do anything yet")}
+      />
+      <PillButton
+        styleType="google"
+        className="hover:bg-[#dddddd]"
+        onClick={() => console.log("Doesn't do anything yet")}
+      />
       <hr className="w-[24rem] mt-10 mb-5" />
-      <LoginForm/>
+      <LoginForm />
       <hr className="m-5 border-t-gray-300 w-[26rem]" />
       <p>
         Don't have an account?{" "}

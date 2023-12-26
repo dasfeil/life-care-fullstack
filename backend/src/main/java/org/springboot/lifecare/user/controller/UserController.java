@@ -1,5 +1,6 @@
 package org.springboot.lifecare.user.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,38 +11,58 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1")
 @Slf4j
+@CrossOrigin
 @RequiredArgsConstructor
 public class UserController {
     private final UserBiz userBiz;
 
+
     @PostMapping("/sign-up")
     public ResponseEntity<?> createUser(@Valid @RequestBody UserCreationDTO userCreationDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+            List<String> errors = new ArrayList<>();
+            bindingResult.getAllErrors().forEach(
+                    error -> errors.add(error.getDefaultMessage())
+            );
+            return ResponseEntity.badRequest().body(errors);
         }
         return userBiz.register(userCreationDTO);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody UserDTO userDTO, BindingResult bindingResult) {
+    public ResponseEntity<?> login(@Valid @RequestBody UserDTO userDTO, BindingResult bindingResult, HttpServletResponse response) {
         if (bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+            List<String> errors = new ArrayList<>();
+            bindingResult.getAllErrors().forEach(
+                    error -> errors.add(error.getDefaultMessage())
+            );
+            return ResponseEntity.badRequest().body(errors);
         }
-        return userBiz.authenticate(userDTO);
+        return userBiz.authenticate(userDTO, response);
     }
 
     @PostMapping("/manage/inquiry")
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     public ResponseEntity<?> returnInquiry(@Valid @RequestBody PaginationInquiryRequestDTO paginationInquiryRequestDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+            List<String> errors = new ArrayList<>();
+            bindingResult.getAllErrors().forEach(
+                    error -> errors.add(error.getDefaultMessage())
+            );
+            return ResponseEntity.badRequest().body(errors);
         }
         return userBiz.inquireUsers(paginationInquiryRequestDTO);
     }
 
     @PostMapping("/manage/inquiry/all")
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     public ResponseEntity<?> getAllData(@Valid @RequestBody AllInquiryRequestDTO allInquiryRequestDTO) {
         return userBiz.getAllUsersWithParams(allInquiryRequestDTO);
     }

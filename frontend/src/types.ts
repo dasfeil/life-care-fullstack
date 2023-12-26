@@ -8,9 +8,9 @@ export type formData = {
 
 export type inquiryData = {
     userNo: number,
-    id: number,
+    id: String,
     username: string,
-    phoneNo: number,
+    phoneNo: String,
     email: string,
     joinDate: string,
     [key: string]: unknown
@@ -35,3 +35,12 @@ export type loginData = {
     password: string,
     remember: boolean
 };
+
+export type authResponse = {
+    token: string,
+    type: string,
+    id: number,
+    username: string,
+    email: string,
+    roles: string[]
+}

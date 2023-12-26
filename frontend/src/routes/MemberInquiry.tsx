@@ -5,7 +5,6 @@ import ChevronLeftArrowSVG from "../components/svgs/ChevronLeftArrowSVG";
 import ChevronRightArrowSVG from "../components/svgs/ChevronRightArrowSVG";
 import { formData as data, inquiryData } from "../types";
 import { handleInquiryAll, handleInquiryPagination } from "../axios/instance";
-import { useErrorBoundary } from "react-error-boundary";
 
 const dateConstructor = new Date();
 
@@ -40,7 +39,7 @@ export default function MemberInquiry() {
 
   const [excelOption, setExcelOption] = useState(0);
 
-  const { showBoundary } = useErrorBoundary();
+  const [error, setError] = useState<string[]>();
 
   const pageSize = 5;
 
@@ -52,7 +51,7 @@ export default function MemberInquiry() {
         setTotalPage(data.pages);
       })
       .catch((error) => {
-        showBoundary(error);
+        setError(error);
       });
   };
 
@@ -89,7 +88,9 @@ export default function MemberInquiry() {
           id: "",
           username: "",
           phoneNo: "",
-        }).then((res) => res.data);
+        })
+          .then((res) => res.data)
+          .catch(setError);
     }
   };
 
@@ -105,6 +106,12 @@ export default function MemberInquiry() {
         handleSubmit={handleSubmit}
         showExcel={() => setShowExcel((state) => !state)}
       />
+      {error &&
+        error.map((e) => (
+          <p className="text-red-500" key={e}>
+            {e}
+          </p>
+        ))}
       {data && data?.length !== 0 ? (
         <>
           <div className="flex flex-col items-center mb-1">
