@@ -1,19 +1,28 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Root from "./routes/Root";
 import Login from "./routes/Login";
 import SignUp from "./routes/SignUp";
 import MemberInquiry from "./routes/MemberInquiry";
 import ErrorRoute from "./routes/ErrorRoute";
+import { RequireAuth } from "./components/RequireAuth";
+import React from "react";
+import { AuthProvider } from "./context/AuthProvider";
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <Root />,
-    errorElement: <ErrorRoute/>,
+    element: (
+      <AuthProvider>
+        <Root />
+      </AuthProvider>
+    ),
+    errorElement: <ErrorRoute />,
     children: [
+      {
+        path: "",
+        element: <p className="m-auto">Landing page</p>
+      },
       {
         path: "login",
         element: <Login />,
@@ -23,12 +32,20 @@ const router = createBrowserRouter([
         element: <SignUp />,
       },
       {
-        path: "manage",
-        element: <Outlet/>,
+        element: <RequireAuth allowedRoles={["ADMIN"]}/>,
         children: [
           {
-            path: "inquiry",
+            path: "manage/inquiry",
             element: <MemberInquiry />,
+          },
+        ],
+      },
+      {
+        element: <RequireAuth allowedRoles={["USER", "ADMIN"]}></RequireAuth>,
+        children: [
+          {
+            path: "user/profile",
+            element: <div className="m-auto">You are an user</div>,
           },
         ],
       },

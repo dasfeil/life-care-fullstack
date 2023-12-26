@@ -4,8 +4,8 @@ server:
 spring:
     datasource:
         url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/db_example
-        username: springuser1
-        password: springpassword
+        username: root
+        password: root
         driver-class-name: com.mysql.cj.jdbc.Driver
     jpa:
         hibernate:

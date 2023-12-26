@@ -24,8 +24,16 @@ const IDForm = () => {
       <h2 className="w-[20rem] text-center border border-b-gray-300 leading-[0.1em] my-10">
         <span className="bg-[#FFF] p-2 text-gray-500">or</span>
       </h2>
-      <PillButton styleType="facebook" className="mb-3 hover:bg-[#2f477a]" />
-      <PillButton styleType="google" className="hover:bg-[#dddddd]" />
+      <PillButton
+        styleType="facebook"
+        className="mb-3 hover:bg-[#2f477a]"
+        onClick={() => console.log("Doesn't do anything yet")}
+      />
+      <PillButton
+        styleType="google"
+        className="hover:bg-[#dddddd]"
+        onClick={() => console.log("Doesn't do anything yet")}
+      />
       <hr className="my-5 w-[24rem] border-t-gray-300" />
       <p className="text-center">
         Already have an account?{" "}

@@ -3,6 +3,9 @@ package org.springboot.lifecare.user.biz;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springboot.lifecare.common.exception.CustomException;
 import org.springboot.lifecare.user.dao.RoleDAO;
 import org.springboot.lifecare.user.dao.UserDAO;
 import org.springboot.lifecare.user.dto.*;
@@ -59,22 +62,15 @@ public class UserBiz implements UserDetailsService {
     }
 
     public ResponseEntity<?> register(UserCreationDTO userDTO) {
-        if (userDAO.existsById(userDTO.getId())) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID is already taken");
-        if (userDAO.existsByEmail(userDTO.getEmail())) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email is already taken");
+        if (userDAO.existsById(userDTO.getId())) throw new CustomException("ID is already taken");
+        if (userDAO.existsByEmail(userDTO.getEmail())) throw new CustomException("Email is already taken");
 
         List<String> combs = List.of("012", "123", "234",
                 "345", "456", "567", "678", "789", "890", "987", "876",
                 "765", "654", "543", "432", "321", "210");
 
         for (String comb : combs) {
-            if (userDTO.getPassword().contains(comb)) {
-                HashMap<String, String> temp = new HashMap<>();
-
-                temp.put("defaultMessage", "Password contains consecutive numbers");
-
-                return ResponseEntity.badRequest()
-                        .body(List.of(temp));
-            }
+            if (userDTO.getPassword().contains(comb)) throw new CustomException("Password contains consecutive numbers, e.g., 123");
         }
 
         User user = new User(
@@ -91,12 +87,12 @@ public class UserBiz implements UserDetailsService {
         Pattern pattern = Pattern.compile("^[0-9]{3,}$");
         Matcher matcher = pattern.matcher(id);
         if (matcher.matches())
-            return userDAO.findById(id).orElseThrow(() -> new UsernameNotFoundException("Id not found"));
+            return userDAO.findById(id).orElseThrow(() -> new UsernameNotFoundException(""));
         else
-            return userDAO.findByEmail(id).orElseThrow(() -> new UsernameNotFoundException("Email not found"));
+            return userDAO.findByEmail(id).orElseThrow(() -> new UsernameNotFoundException(""));
     }
 
-    public ResponseEntity<?> authenticate(UserDTO userDTO) {
+    public ResponseEntity<?> authenticate(UserDTO userDTO, HttpServletResponse response) {
         boolean useEmail = false;
         Pattern pattern = Pattern.compile("^[0-9]{3,}$");
         Matcher matcher = pattern.matcher(userDTO.getCred());
@@ -113,23 +109,34 @@ public class UserBiz implements UserDetailsService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         User user;
         if (useEmail) {
-            user = userDAO.findByEmail(userDTO.getCred()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            user = userDAO.findByEmail(userDTO.getCred()).orElseThrow(() -> new UsernameNotFoundException(""));
         } else {
-            user = userDAO.findById(userDTO.getCred()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            user = userDAO.findById(userDTO.getCred()).orElseThrow(() -> new UsernameNotFoundException(""));
         }
 
         List<String> rolesNames = new ArrayList<>();
         user.getRoles().forEach(r -> rolesNames.add(r.getRoleName()));
-        JwtResponse jwtResponse = new JwtResponse(getToken(user, rolesNames, userDTO.isRemember()),
-                user.getUserNo(), user.getUsername(), user.getEmail(), rolesNames);
+        String jwt = getToken(user, rolesNames, userDTO.isRemember());
+        JwtResponse jwtResponse = new JwtResponse(jwt, user.getUserNo(),
+                user.getUsername(), user.getEmail(), rolesNames);
+        Cookie cookie = new Cookie("jwt", jwt);
+        if (userDTO.isRemember()) {
+            cookie.setMaxAge(2592000);
+        } else {
+            cookie.setMaxAge(60*60*10);
+        }
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setSecure(true);
+        response.addCookie(cookie);
         return ResponseEntity.ok(jwtResponse);
     }
 
     private String getToken(User user, List<String> rolesNames, Boolean remember) {
-        long expireMs = remember? 2629800000L : expiration;
+        long expireMs = remember? 2592000000L : expiration;
         SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
         return Jwts.builder()
-                .subject(user.getUsername())
+                .subject(user.getId())
                 .claim("role", rolesNames)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(Date.from(Instant.now().plusMillis(expireMs)))

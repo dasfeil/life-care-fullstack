@@ -1,13 +1,15 @@
 import axios from "axios";
 import { formData as data, inquiryAllDataRequest, loginData, signUpData } from "../types";
-
+import Cookies from "js-cookie";
 const Instance = axios.create({
-    baseURL: 'http://localhost:8080/api/v1'
+    baseURL: 'http://localhost:8080/api/v1',
+    headers: { 'Content-Type': 'application/json'}, 
+    withCredentials: true
 });
 
 Instance.interceptors.request.use((request) => {
     return request;
-});
+}, (error) => Promise.reject(error));
 
 Instance.interceptors.response.use(
     (response) => {
@@ -22,6 +24,7 @@ Instance.interceptors.response.use(
         }
 
         if (statusCode === 400) {
+            return Promise.reject(error.response.data.messages)
         }
         return Promise.reject(error);
     }
@@ -42,6 +45,10 @@ export const handleInquiryPagination = async (data: data, page: Number, pageSize
         size: pageSize,
     })
 };
+
+export const handleLogout = () => {
+    Cookies.remove("jwt");
+}
 
 export const handleInquiryAll = async (data: inquiryAllDataRequest) => {
     return Instance.post("/manage/inquiry/all", data)

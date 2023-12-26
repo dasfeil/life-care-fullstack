@@ -32,11 +32,12 @@ public class SecurityConfig {
             throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable)
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
                         auth -> auth
-                                .requestMatchers("/manage/**").hasAuthority("ADMIN")
-                                .requestMatchers("/user/**").hasAuthority("USER")
+                                .requestMatchers("api/v1/manage/**").hasAuthority("ADMIN")
+                                .requestMatchers("api/v1/user/**").hasAuthority("USER")
                                 .anyRequest().permitAll());
         http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

@@ -1,6 +1,7 @@
 package org.springboot.lifecare.user.entity;
 
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
@@ -54,7 +55,7 @@ public class User implements Serializable, UserDetails {
     @Column(nullable = false)
     private UserRank userRank;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(name="user_roles", joinColumns = @JoinColumn(name="user_no"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles = new ArrayList<>();
 

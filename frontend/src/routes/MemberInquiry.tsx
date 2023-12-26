@@ -52,6 +52,7 @@ export default function MemberInquiry() {
         setTotalPage(data.pages);
       })
       .catch((error) => {
+        console.log(error);
         showBoundary(error);
       });
   };
@@ -89,13 +90,17 @@ export default function MemberInquiry() {
           id: "",
           username: "",
           phoneNo: "",
-        }).then((res) => res.data);
+        })
+          .then((res) => res.data)
+          .catch(setError);
     }
   };
 
   useEffect(() => {
     inquire(initialValues, 0);
   }, []);
+
+  const [error, setError] = useState<string[]>();
 
   return (
     <div className="mt-12 min-h-screen flex flex-col items-center">
@@ -105,6 +110,12 @@ export default function MemberInquiry() {
         handleSubmit={handleSubmit}
         showExcel={() => setShowExcel((state) => !state)}
       />
+      {error &&
+        error.map((e) => (
+          <p className="text-red-500" key={e}>
+            {e}
+          </p>
+        ))}
       {data && data?.length !== 0 ? (
         <>
           <div className="flex flex-col items-center mb-1">

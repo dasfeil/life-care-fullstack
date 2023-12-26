@@ -121,7 +121,7 @@ const steps = 2;
 
 export default function SignUp() {
   const [step, setStep] = useState(0);
-  const [errorMsg, setErrorMsg] = useState("");
+  const [error, setError] = useState<string[]>();
   const currentSchema = signUpSchema[step];
   const lastStep = step === steps;
 
@@ -137,8 +137,8 @@ export default function SignUp() {
           toast("Sign-up successful");
           setStep(3);
         })
-        .catch((err: string) => {
-          setErrorMsg(err);
+        .catch((err) => {
+          setError(err);
           setStep(0);
         });
     } else {
@@ -167,7 +167,12 @@ export default function SignUp() {
       >
         {() => (
           <Form className="mt-24 min-h-screen flex flex-col items-center">
-            {errorMsg && <p className="text-red-500">{errorMsg}</p>}
+            {error &&
+              error.map((e) => (
+                <p className="text-red-500" key={e}>
+                  {e}
+                </p>
+              ))}
             {renderFormStep(step, handleBack)}
           </Form>
         )}
