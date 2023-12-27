@@ -18,7 +18,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1")
 @Slf4j
-@CrossOrigin
 @RequiredArgsConstructor
 public class UserController {
     private final UserBiz userBiz;
@@ -54,7 +53,6 @@ public class UserController {
     }
 
     @PostMapping("/manage/inquiry")
-    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     public ResponseEntity<?> returnInquiry(@Valid @RequestBody PaginationInquiryRequestDTO paginationInquiryRequestDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             List<String> errors = new ArrayList<>();
@@ -67,7 +65,6 @@ public class UserController {
     }
 
     @PostMapping("/manage/inquiry/all")
-    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     public ResponseEntity<?> getAllData(@Valid @RequestBody AllInquiryRequestDTO allInquiryRequestDTO) {
         return userBiz.getAllUsersWithParams(allInquiryRequestDTO);
     }

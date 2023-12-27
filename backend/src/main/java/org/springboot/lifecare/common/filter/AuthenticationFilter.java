@@ -39,14 +39,10 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtils jwtUtils;
 
-    @Value("${jwt.secret}")
-    private String SECRET_KEY;
-
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
-        SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET_KEY));
         String token = null;
         final String userID;
 
