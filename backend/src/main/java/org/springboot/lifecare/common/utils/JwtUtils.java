@@ -6,7 +6,6 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springboot.lifecare.user.entity.User;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -42,7 +41,7 @@ public class JwtUtils {
         return Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
     }
 
-    private Boolean isTokenExpired(String token) {
+    public Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
@@ -53,7 +52,7 @@ public class JwtUtils {
     }
 
     private String createToken(User user, List<String> rolesNames, Boolean remember) {
-        long expireMs = remember? 2592000000L : expiration;
+        long expireMs = remember? 86400000L : expiration;
         SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET_KEY));
         return Jwts.builder()
                 .subject(user.getId())

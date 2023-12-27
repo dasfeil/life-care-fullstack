@@ -12,7 +12,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -47,9 +46,9 @@ public class UserController {
         return userBiz.authenticate(userDTO, response);
     }
 
-    @PostMapping("/authenticate")
+    @PostMapping("/refresh")
     public ResponseEntity<?> authenticate() {
-        return ResponseEntity.ok("Test");
+        return userBiz.verifyToken();
     }
 
     @PostMapping("/manage/inquiry")

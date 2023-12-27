@@ -3,7 +3,8 @@ import { formData as data, inquiryAllDataRequest, loginData, signUpData } from "
 
 const Instance = axios.create({
     baseURL: import.meta.env.VITE_BASE_URL,
-    headers: { 'Content-Type': 'application/json' }
+    headers: { 'Content-Type': 'application/json' },
+    withCredentials: true
 });
 
 Instance.interceptors.request.use((request) => {
@@ -15,21 +16,19 @@ Instance.interceptors.response.use(
         return response;
     },
     (error) => {
-        const statusCode = error.response ? error.response.status : null;
         console.log(error)
-        if (statusCode === 401) {
-        }
+        const statusCode = error.response ? error.response.status : null;
 
         if (statusCode >= 500) {
-            return Promise.reject(["Internal Server Error"])
+            return Promise.reject(error)
         }
 
-        if (statusCode === 400) {
+        if (statusCode === 400 && error.response.data.messages) {
             return Promise.reject(error.response.data.messages)
         }
 
         if (statusCode === null) {
-            return Promise.reject(["Network error"])
+            return Promise.reject(["No server respond"])
         }
         return Promise.reject(error);
     }
@@ -43,8 +42,8 @@ export function handleSignUp(data: signUpData) {
     return Instance.post("/api/v1/sign-up", data)
 }
 
-export function handlePersist() {
-    return Instance.post("/api/v1/authenticate", {}, { withCredentials: true })
+export function handleCookieToken() {
+    return Instance.post("/api/v1/refresh", {})
 }
 
 export const handleInquiryPagination = async (data: data, page: Number, pageSize: number) => {
@@ -52,13 +51,11 @@ export const handleInquiryPagination = async (data: data, page: Number, pageSize
         ...data,
         page: page,
         size: pageSize,
-    }, {
-        withCredentials: true
     })
 };
 
 export const handleLogout = () => {
-    return Instance.post("/api/v1/manage/inquiry", {}, {withCredentials: true})
+    return Instance.post("/api/v1/manage/inquiry", {})
 }
 
 export const handleInquiryAll = async (data: inquiryAllDataRequest) => {

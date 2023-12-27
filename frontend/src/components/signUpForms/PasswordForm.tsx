@@ -36,7 +36,6 @@ const PasswordForm = ({ handleBack }: Props) => {
       />
       <PillButton
         type="button"
-        styleType="none"
         onClick={submitForm}
         text="Continue"
         className="mt-10 text-[#ffff] bg-[#363d61] hover:bg-[#4f598d]"

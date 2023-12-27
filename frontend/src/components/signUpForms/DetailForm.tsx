@@ -127,7 +127,6 @@ const DetailForm = ({ handleBack }: Props) => {
       </div>
       <PillButton
         type="button"
-        styleType="none"
         onClick={submitForm}
         text="Sign Up"
         className="mt-10 text-[#ffff] bg-[#363d61] hover:bg-[#4f598d]"

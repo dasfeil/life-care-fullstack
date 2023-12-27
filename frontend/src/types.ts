@@ -37,8 +37,6 @@ export type loginData = {
 };
 
 export type authResponse = {
-    token: string,
-    type: string,
     id: number,
     username: string,
     email: string,

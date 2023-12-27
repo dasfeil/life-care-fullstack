@@ -21,8 +21,7 @@ const initialValues = {
 };
 
 const LoginForm = () => {
-  const { setAuth, setPersist } = useAuth();
-
+  const { setAuth } = useAuth();
   const [error, setError] = useState<string[]>();
 
   const navigate = useNavigate();
@@ -39,11 +38,11 @@ const LoginForm = () => {
             .then((res) => {
               toast("Login Succeed");
               setAuth({ ...res.data });
-              setPersist(values.persist)
               navigate(from, { replace: true });
             })
             .catch((error) => {
-              setError(error);
+              if (typeof error == "string") setError([error]);
+              else setError(error);
             });
         }}
       >
@@ -80,7 +79,6 @@ const LoginForm = () => {
                 </p>
               ))}
             <PillButton
-              styleType="none"
               type="submit"
               text="Log In"
               className="mt-10 text-[#ffff] bg-[#363d61] hover:bg-[#4f598d]"

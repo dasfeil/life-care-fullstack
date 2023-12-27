@@ -1,6 +1,5 @@
 import * as Yup from "yup";
 import { Form, Navigate } from "react-router-dom";
-import { useState } from "react";
 import { Formik, FormikHelpers } from "formik";
 import IDForm from "../components/signUpForms/IDForm";
 import PasswordForm from "../components/signUpForms/PasswordForm";
@@ -8,6 +7,8 @@ import DetailForm from "../components/signUpForms/DetailForm";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { handleSignUp } from "../axios/instance";
+import { useState } from "react";
+import useAuth from "../hooks/useAuth";
 
 const signUpSchema = [
   Yup.object().shape({
@@ -125,6 +126,8 @@ export default function SignUp() {
   const currentSchema = signUpSchema[step];
   const lastStep = step === steps;
 
+  const { auth } = useAuth();
+
   const handleSubmit = async (
     values: typeof initialValues,
     actions: FormikHelpers<typeof initialValues>
@@ -154,29 +157,33 @@ export default function SignUp() {
 
   return (
     <>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={currentSchema}
-        onSubmit={async (values, helpers) => {
-          helpers.validateForm().then(() => {
-            handleSubmit(values, helpers);
-          });
-        }}
-        validateOnBlur={false}
-        validateOnChange={false}
-      >
-        {() => (
-          <Form className="mt-24 min-h-screen flex flex-col items-center">
-            {error &&
-              error.map((e) => (
-                <p className="text-red-500" key={e}>
-                  {e}
-                </p>
-              ))}
-            {renderFormStep(step, handleBack)}
-          </Form>
-        )}
-      </Formik>
+      {!auth?.username ? (
+        <Formik
+          initialValues={initialValues}
+          validationSchema={currentSchema}
+          onSubmit={async (values, helpers) => {
+            helpers.validateForm().then(() => {
+              handleSubmit(values, helpers);
+            });
+          }}
+          validateOnBlur={false}
+          validateOnChange={false}
+        >
+          {() => (
+            <Form className="mt-24 min-h-screen flex flex-col items-center">
+              {error &&
+                error.map((e) => (
+                  <p className="text-red-500" key={e}>
+                    {e}
+                  </p>
+                ))}
+              {renderFormStep(step, handleBack)}
+            </Form>
+          )}
+        </Formik>
+      ) : (
+        <Navigate to="/" replace />
+      )}
     </>
   );
 }

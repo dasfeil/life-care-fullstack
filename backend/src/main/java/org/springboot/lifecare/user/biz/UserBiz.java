@@ -91,7 +91,6 @@ public class UserBiz implements UserDetailsService {
         if (!matcher.matches()) {
             useEmail = true;
         }
-
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         userDTO.getCred(),
@@ -101,29 +100,40 @@ public class UserBiz implements UserDetailsService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         User user;
         if (useEmail) {
-            user = userDAO.findByEmail(userDTO.getCred()).orElseThrow(() -> new UsernameNotFoundException(""));
+            user = userDAO.findByEmail(userDTO.getCred()).orElseThrow(() ->
+                    new UsernameNotFoundException(""));
         } else {
-            user = userDAO.findById(userDTO.getCred()).orElseThrow(() -> new UsernameNotFoundException(""));
+            user = userDAO.findById(userDTO.getCred()).orElseThrow(() ->
+                    new UsernameNotFoundException(""));
         }
 
         List<String> rolesNames = new ArrayList<>();
         user.getRoles().forEach(r -> rolesNames.add(r.getRoleName()));
 
         String jwt = jwtUtils.generateToken(user, userDTO.isPersist());
-        JwtResponse jwtResponse = new JwtResponse(jwt, user.getUserNo(),
+        JwtResponse jwtResponse = new JwtResponse(user.getUserNo(),
                 user.getUsername(), user.getEmail(), rolesNames);
         Cookie cookie = new Cookie("jwt", jwt);
 
         if (userDTO.isPersist()) {
-            cookie.setMaxAge(2592000);
+            cookie.setMaxAge(60*60*24);
         } else {
             cookie.setMaxAge(60*60*10);
         }
         cookie.setHttpOnly(true);
         cookie.setPath("/");
-        cookie.setSecure(true);
         response.addCookie(cookie);
         return ResponseEntity.ok(jwtResponse);
+    }
+
+    public ResponseEntity<?> verifyToken() {
+        String id = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = (User) loadUserByUsername(id);
+        List<String> rolesNames = new ArrayList<>();
+        user.getRoles().forEach(r -> rolesNames.add(r.getRoleName()));
+        JwtResponse jwtResponse = new JwtResponse(user.getUserNo(),
+                user.getUsername(), user.getEmail(), rolesNames);
+        return ResponseEntity.ok().body(jwtResponse);
     }
 
     public ResponseEntity<?> inquireUsers(PaginationInquiryRequestDTO requestDTO) {

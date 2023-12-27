@@ -20,7 +20,7 @@ const IDForm = () => {
         type="button"
         onClick={submitForm}
         text="Continue"
-        className="mt-10 text-[#3a2d2d] bg-[#363d61] hover:bg-[#4f598d]"
+        className="mt-10 text-[#ffffff] bg-[#363d61] hover:bg-[#4f598d]"
       />
       <h2 className="w-[20rem] text-center border border-b-gray-300 leading-[0.1em] my-10">
         <span className="bg-[#FFF] p-2 text-gray-500">or</span>
