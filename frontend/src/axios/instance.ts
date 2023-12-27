@@ -16,7 +16,6 @@ Instance.interceptors.response.use(
         return response;
     },
     (error) => {
-        console.log(error)
         const statusCode = error.response ? error.response.status : null;
 
         if (statusCode >= 500) {

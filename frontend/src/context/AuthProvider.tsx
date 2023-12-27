@@ -27,7 +27,7 @@ const AuthProvider = ({ children }: Props) => {
       .then((res) => {
         isMounted && setAuth({ ...res.data });
       })
-      .catch(console.log);
+      .catch(() => console.log("Not authenticated"));
     return () => {
       isMounted = false;
     };
