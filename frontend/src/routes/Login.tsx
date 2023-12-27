@@ -11,7 +11,7 @@ export default function Login() {
   return (
     <>
       {!auth?.username ? (
-        <div className="mt-24 min-h-screen flex flex-col items-center">
+        <div className="min-h-screen flex flex-col items-center">
           <p className="text-center font-bold text-5xl mb-10">Log in</p>
           <PillButton
             className="bg-[#3B5998] text-white mb-3 hover:bg-[#2f477a]"
