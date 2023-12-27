@@ -9,6 +9,7 @@ import ErrorRoute from "./routes/ErrorRoute";
 import { RequireAuth } from "./components/RequireAuth";
 import React from "react";
 import { AuthProvider } from "./context/AuthProvider";
+import { PersistLogin } from "./components/PersistLogin";
 
 const router = createBrowserRouter([
   {
@@ -21,7 +22,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <p className="m-auto">Landing page</p>
+        element: <p className="m-auto">Landing page</p>,
       },
       {
         path: "login",
@@ -32,20 +33,27 @@ const router = createBrowserRouter([
         element: <SignUp />,
       },
       {
-        element: <RequireAuth allowedRoles={["ADMIN"]}/>,
+        element: <PersistLogin />,
         children: [
           {
-            path: "manage/inquiry",
-            element: <MemberInquiry />,
+            element: <RequireAuth allowedRoles={["ADMIN"]} />,
+            children: [
+              {
+                path: "manage/inquiry",
+                element: <MemberInquiry />,
+              },
+            ],
           },
-        ],
-      },
-      {
-        element: <RequireAuth allowedRoles={["USER", "ADMIN"]}></RequireAuth>,
-        children: [
           {
-            path: "user/profile",
-            element: <div className="m-auto">You are an user</div>,
+            element: (
+              <RequireAuth allowedRoles={["USER", "ADMIN"]}></RequireAuth>
+            ),
+            children: [
+              {
+                path: "user/profile",
+                element: <div className="m-auto">You are an user</div>,
+              },
+            ],
           },
         ],
       },

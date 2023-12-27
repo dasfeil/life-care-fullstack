@@ -1,11 +1,9 @@
 import axios from "axios";
 import { formData as data, inquiryAllDataRequest, loginData, signUpData } from "../types";
-import Cookies from "js-cookie";
 
 const Instance = axios.create({
     baseURL: import.meta.env.VITE_BASE_URL,
-    headers: { 'Content-Type': 'application/json' },
-    withCredentials: true
+    headers: { 'Content-Type': 'application/json' }
 });
 
 Instance.interceptors.request.use((request) => {
@@ -45,6 +43,10 @@ export function handleSignUp(data: signUpData) {
     return Instance.post("/api/v1/sign-up", data)
 }
 
+export function handlePersist() {
+    return Instance.post("/api/v1/authenticate", {}, { withCredentials: true })
+}
+
 export const handleInquiryPagination = async (data: data, page: Number, pageSize: number) => {
     return Instance.post("/api/v1/manage/inquiry", {
         ...data,
@@ -56,7 +58,7 @@ export const handleInquiryPagination = async (data: data, page: Number, pageSize
 };
 
 export const handleLogout = () => {
-    Cookies.remove("jwt");
+    return Instance.post("/api/v1/manage/inquiry", {}, {withCredentials: true})
 }
 
 export const handleInquiryAll = async (data: inquiryAllDataRequest) => {

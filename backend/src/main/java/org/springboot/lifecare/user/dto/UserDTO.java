@@ -14,5 +14,5 @@ public class UserDTO {
     @Pattern(regexp = "^[a-zA-Z\\d!@#$%^&*]{8,}$", message = "Input contains invalid characters and/or is too short")
     private String password;
 
-    private boolean remember;
+    private boolean persist;
 }

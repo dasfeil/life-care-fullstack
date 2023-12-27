@@ -33,7 +33,7 @@ export type signUpData = {
 export type loginData = {
     cred: string,
     password: string,
-    remember: boolean
+    persist: boolean
 };
 
 export type authResponse = {

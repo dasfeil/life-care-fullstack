@@ -109,12 +109,12 @@ public class UserBiz implements UserDetailsService {
         List<String> rolesNames = new ArrayList<>();
         user.getRoles().forEach(r -> rolesNames.add(r.getRoleName()));
 
-        String jwt = jwtUtils.generateToken(user, userDTO.isRemember());
+        String jwt = jwtUtils.generateToken(user, userDTO.isPersist());
         JwtResponse jwtResponse = new JwtResponse(jwt, user.getUserNo(),
                 user.getUsername(), user.getEmail(), rolesNames);
         Cookie cookie = new Cookie("jwt", jwt);
 
-        if (userDTO.isRemember()) {
+        if (userDTO.isPersist()) {
             cookie.setMaxAge(2592000);
         } else {
             cookie.setMaxAge(60*60*10);
