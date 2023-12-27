@@ -20,7 +20,7 @@ export default function Login() {
             onClick={() => console.log("Doesn't do anything yet")}
           />
           <PillButton
-            className="bg-white border border-[#676767] text-black hover:bg-[#dddddd]"
+            className="bg-white box-border border border-[#676767] text-black hover:bg-[#dddddd]"
             text="Continue with Google"
             icon={<GoogleSVG />}
             onClick={() => console.log("Doesn't do anything yet")}

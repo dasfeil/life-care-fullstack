@@ -1,5 +1,5 @@
 import axios from "axios";
-import { formData as data, inquiryAllDataRequest, loginData, signUpData } from "../types";
+import { FormData as data, InquiryAllDataRequest, LoginData, SignUpData } from "../types";
 
 const Instance = axios.create({
     baseURL: import.meta.env.VITE_BASE_URL,
@@ -34,11 +34,11 @@ Instance.interceptors.response.use(
     }
 );
 
-export function handleLogin(data: loginData) {
+export function handleLogin(data: LoginData) {
     return Instance.post("/api/v1/login", data)
 }
 
-export function handleSignUp(data: signUpData) {
+export function handleSignUp(data: SignUpData) {
     return Instance.post("/api/v1/sign-up", data)
 }
 
@@ -58,7 +58,7 @@ export const handleLogout = () => {
     return Instance.post("/api/v1/manage/inquiry", {})
 }
 
-export const handleInquiryAll = async (data: inquiryAllDataRequest) => {
+export const handleInquiryAll = async (data: InquiryAllDataRequest) => {
     return Instance.post("api/v1/manage/inquiry/all", data, {
         withCredentials: true
     })

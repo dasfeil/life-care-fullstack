@@ -24,6 +24,8 @@ const DetailForm = ({ handleBack }: Props) => {
 
   const [domainSelected, setDomainSelected] = useState(false);
 
+  const [currentDomain, setCurrentDomain] = useState("");
+
   return (
     <div className="w-[20rem]">
       <div className="flex h-12 items-center gap-2">
@@ -91,10 +93,11 @@ const DetailForm = ({ handleBack }: Props) => {
               <div className="py-2 text-sm text-gray-700">
                 {options.map((option) => (
                   <div
-                    className="block px-4 py-2 hover:bg-gray-100"
+                    className={`block px-4 py-2 hover:bg-gray-100 ${currentDomain == option ? "bg-gray-200" : ""}`}
                     key={option}
                     onClick={() => {
                       setDomainSelected(true);
+                      setCurrentDomain(option);
                       setFieldValue("emailDomain", option);
                     }}
                   >
@@ -105,6 +108,7 @@ const DetailForm = ({ handleBack }: Props) => {
                   className="block px-4 py-2 hover:bg-gray-100"
                   onClick={() => {
                     setDomainSelected(false);
+                    setCurrentDomain("");
                     setFieldValue("emailDomain", "");
                   }}
                 >

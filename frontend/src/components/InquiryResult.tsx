@@ -1,4 +1,4 @@
-import { inquiryData as data } from "../types";
+import { InquiryData as data } from "../types";
 
 type Props = {
   data: data[];

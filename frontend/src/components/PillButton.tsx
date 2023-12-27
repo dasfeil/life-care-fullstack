@@ -4,7 +4,7 @@ const PillButton = ({ type, text, className, icon, ...props }: Props) => {
   return (
     <button
       {...props}
-      className={"w-[20rem] font-semibold rounded-full p-2 " + className}
+      className={"box-sizing w-[20rem] h-[50px] font-semibold rounded-full p-2 " + className}
       type={type}
     >
       <div className="flex relative h-[32px] ">

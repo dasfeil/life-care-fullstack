@@ -1,5 +1,5 @@
 import { ReactNode, createContext, useEffect, useState } from "react";
-import { authResponse } from "../types";
+import { AuthResponse } from "../types";
 import { handleCookieToken } from "../axios/instance";
 
 type Props = {
@@ -7,8 +7,8 @@ type Props = {
 };
 
 type IAuthContext = {
-  auth: authResponse | undefined;
-  setAuth: (state: authResponse) => void;
+  auth: AuthResponse | undefined;
+  setAuth: (state: AuthResponse) => void;
 };
 
 const initialValues: IAuthContext = {
@@ -19,7 +19,7 @@ const initialValues: IAuthContext = {
 const AuthContext = createContext<IAuthContext>(initialValues);
 
 const AuthProvider = ({ children }: Props) => {
-  const [auth, setAuth] = useState<authResponse>();
+  const [auth, setAuth] = useState<AuthResponse>();
 
   useEffect(() => {
     let isMounted = true;

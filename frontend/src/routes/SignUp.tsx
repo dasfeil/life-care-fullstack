@@ -81,7 +81,7 @@ const signUpSchema = [
   }),
   Yup.object().shape({
     name: Yup.string()
-      .matches(/^[a-zA-Z]+$/, "Name should only contain English letters")
+      .matches(/^([a-zA-Z]+ *)+$/, "Name should only contain English letters and/or spaces (Cannot start with space or empty)")
       .required("Name is required"),
     phoneNo: Yup.string()
       .matches(/^[\d]*$/, "Number can only contain digits (0-9)")
@@ -167,7 +167,6 @@ export default function SignUp() {
             });
           }}
           validateOnBlur={false}
-          validateOnChange={false}
         >
           {() => (
             <Form className="mt-24 min-h-screen flex flex-col items-center">

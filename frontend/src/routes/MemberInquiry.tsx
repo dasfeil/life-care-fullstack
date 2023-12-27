@@ -3,7 +3,7 @@ import InquiryForm from "../components/InquiryForm";
 import InquiryResult from "../components/InquiryResult";
 import ChevronLeftArrowSVG from "../components/svgs/ChevronLeftArrowSVG";
 import ChevronRightArrowSVG from "../components/svgs/ChevronRightArrowSVG";
-import { formData as data, inquiryData } from "../types";
+import { FormData as data, InquiryData } from "../types";
 import { handleInquiryAll, handleInquiryPagination } from "../axios/instance";
 
 const dateConstructor = new Date();
@@ -25,7 +25,7 @@ const initialValues = {
 };
 
 export default function MemberInquiry() {
-  const [data, setData] = useState<inquiryData[]>();
+  const [data, setData] = useState<InquiryData[]>();
 
   const [formData, setFormData] = useState<data>(initialValues);
 
@@ -65,7 +65,7 @@ export default function MemberInquiry() {
     let csv = "";
     let headers = Object.keys(data[0]);
     csv += headers.join(",") + "\n";
-    data.forEach((row: inquiryData) => {
+    data.forEach((row: InquiryData) => {
       let data = headers.map((header) => JSON.stringify(row[header])).join(",");
       csv += data + "\n";
     });

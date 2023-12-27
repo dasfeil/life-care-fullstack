@@ -2,7 +2,7 @@ import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import TextInput from "./TextInput";
 import DateInput from "./DateInput";
-import { formData as data } from "../types";
+import { FormData as data } from "../types";
 
 const inquirySchema = Yup.object().shape({
   id: Yup.string()

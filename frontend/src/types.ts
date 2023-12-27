@@ -1,4 +1,4 @@
-export type formData = {
+export type FormData = {
     id: string,
     phoneNo: string,
     username: string,
@@ -6,7 +6,7 @@ export type formData = {
     joinTo: string,
 }
 
-export type inquiryData = {
+export type InquiryData = {
     userNo: number,
     id: String,
     username: string,
@@ -16,13 +16,13 @@ export type inquiryData = {
     [key: string]: unknown
 }
 
-export type inquiryAllDataRequest = {
+export type InquiryAllDataRequest = {
     id: string,
     username: string,
     phoneNo: string
 }
 
-export type signUpData = {
+export type SignUpData = {
     id: string,
     name: string,
     password: string,
@@ -30,13 +30,13 @@ export type signUpData = {
     phoneNo: string
 }
 
-export type loginData = {
+export type LoginData = {
     cred: string,
     password: string,
     persist: boolean
 };
 
-export type authResponse = {
+export type AuthResponse = {
     id: number,
     username: string,
     email: string,

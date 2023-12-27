@@ -10,7 +10,7 @@ public class UserCreationDTO {
     @Pattern(regexp = "^\\d{3,10}$", message = "ID need to be 3 to 10 digits")
     private String id;
 
-    @Pattern(regexp = "^[a-zA-Z]+$", message = "Name should only contain English letters")
+    @Pattern(regexp = "^([a-zA-Z]+ *)+$", message = "Name should only contain English letters and/or spaces")
     private String name;
 
     @Pattern(regexp = "(^(?=.*[A-Za-z])(?=.*\\d).{10,20})|(^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*]).{8,20}$)", message = "Invalid password")
