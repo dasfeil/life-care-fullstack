@@ -7,7 +7,7 @@ import useAuth from "../hooks/useAuth";
 export default function Root() {
   const { auth } = useAuth();
   return (
-    <div className="min-h-screen bg-gray-200">
+    <div className="min-h-screen bg-gray-200 flex flex-col">
       <div className="bg-black border-gray-900">
         <div className="flex flex-wrap justify-between items-center mx-auto w-screen-xl p-4">
           <Link
@@ -28,6 +28,9 @@ export default function Root() {
                 <Link to="/user/profile" className="text-white hover:underline">
                   Profile
                 </Link>
+                <Link to="/logout" className="text-white hover:underline">
+                  Logout
+                </Link>
               </>
             ) : (
               <>
@@ -42,7 +45,7 @@ export default function Root() {
           </div>
         </div>
       </div>
-      <div className="flex m-auto bg-white flex-col justify-center w-full md:w-[90%] my-6">
+      <div className="h-full flex m-auto rounded-md bg-white flex-col justify-center w-full md:w-[90%] my-6 p-14 flex-grow">
         <ErrorBoundary FallbackComponent={ErrorFallback}>
           <ToastContainer
             position="top-center"

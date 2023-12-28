@@ -54,7 +54,7 @@ export const handleInquiryPagination = async (data: data, page: Number, pageSize
 };
 
 export const handleLogout = () => {
-    return Instance.post("/api/v1/manage/inquiry", {})
+    return Instance.post("/api/v1/logout", {})
 }
 
 export const handleInquiryAll = async (data: InquiryAllDataRequest) => {

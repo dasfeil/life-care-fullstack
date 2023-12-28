@@ -9,6 +9,7 @@ import ErrorRoute from "./routes/ErrorRoute";
 import { RequireAuth } from "./components/RequireAuth";
 import React from "react";
 import { AuthProvider } from "./context/AuthProvider";
+import Logout from "./routes/Logout";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       {
         path: "signup",
         element: <SignUp />,
+      },
+      {
+        path: "logout",
+        element: <Logout/>
       },
       {
         element: <RequireAuth allowedRoles={["ADMIN"]} />,
