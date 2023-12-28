@@ -46,6 +46,11 @@ public class UserController {
         return userBiz.authenticate(userDTO, response);
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+        return userBiz.logout(response);
+    }
+
     @PostMapping("/refresh")
     public ResponseEntity<?> authenticate() {
         return userBiz.verifyToken();

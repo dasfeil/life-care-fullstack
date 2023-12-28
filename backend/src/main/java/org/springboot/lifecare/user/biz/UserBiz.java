@@ -74,6 +74,16 @@ public class UserBiz implements UserDetailsService {
         return ResponseEntity.ok("User registered successfully");
     }
 
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+        Cookie deleteCookie = new Cookie("jwt", null);
+        deleteCookie.setMaxAge(0);
+        deleteCookie.setSecure(true);
+        deleteCookie.setHttpOnly(true);
+        deleteCookie.setPath("/");
+        response.addCookie(deleteCookie);
+        return ResponseEntity.ok("Logout successful");
+    }
+
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
         Pattern pattern = Pattern.compile("^[0-9]{3,}$");

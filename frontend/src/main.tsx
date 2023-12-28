@@ -1,6 +1,10 @@
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import {
+  Navigate,
+  RouterProvider,
+  createBrowserRouter,
+} from "react-router-dom";
 import Root from "./routes/Root";
 import Login from "./routes/Login";
 import SignUp from "./routes/SignUp";
@@ -10,6 +14,8 @@ import { RequireAuth } from "./components/RequireAuth";
 import React from "react";
 import { AuthProvider } from "./context/AuthProvider";
 import Logout from "./routes/Logout";
+import Profile from "./routes/Profile";
+import User from "./routes/User";
 
 const router = createBrowserRouter([
   {
@@ -22,7 +28,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <p className="m-auto">Landing page</p>,
+        element: <Navigate to="login" replace />,
       },
       {
         path: "login",
@@ -34,7 +40,7 @@ const router = createBrowserRouter([
       },
       {
         path: "logout",
-        element: <Logout/>
+        element: <Logout />,
       },
       {
         element: <RequireAuth allowedRoles={["ADMIN"]} />,
@@ -46,11 +52,17 @@ const router = createBrowserRouter([
         ],
       },
       {
-        element: <RequireAuth allowedRoles={["USER", "ADMIN"]}></RequireAuth>,
+        element: <RequireAuth allowedRoles={["USER", "ADMIN"]} />,
         children: [
           {
-            path: "user/profile",
-            element: <div className="m-auto">You are an user</div>,
+            path: "user",
+            element: <User />,
+            children: [
+              {
+                path: "profile",
+                element: <Profile />,
+              },
+            ],
           },
         ],
       },

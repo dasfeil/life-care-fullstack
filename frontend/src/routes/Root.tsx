@@ -7,7 +7,7 @@ import useAuth from "../hooks/useAuth";
 export default function Root() {
   const { auth } = useAuth();
   return (
-    <div className="min-h-screen bg-gray-200 flex flex-col">
+    <div className="min-h-screen bg-[url('/abstract_gray_bg.jpg')] flex flex-col">
       <div className="bg-black border-gray-900">
         <div className="flex flex-wrap justify-between items-center mx-auto w-screen-xl p-4">
           <Link
@@ -19,12 +19,15 @@ export default function Root() {
           <div className="flex items-center space-x-6 rtl:space-x-reverse text-xl">
             {auth?.username ? (
               <>
-                <Link
-                  to="/manage/inquiry"
-                  className="text-white hover:underline"
-                >
-                  Inquiry
-                </Link>
+                {auth?.roles.filter((role) => role == "ADMIN").length == 1 && (
+                  <Link
+                    to="/manage/inquiry"
+                    className="text-white hover:underline"
+                  >
+                    Inquiry
+                  </Link>
+                )}
+
                 <Link to="/user/profile" className="text-white hover:underline">
                   Profile
                 </Link>
@@ -45,7 +48,7 @@ export default function Root() {
           </div>
         </div>
       </div>
-      <div className="h-full flex m-auto rounded-md bg-white flex-col justify-center w-full md:w-[90%] my-6 p-14 flex-grow">
+      <div className="h-full flex m-auto flex-col justify-center w-full my-6 flex-grow">
         <ErrorBoundary FallbackComponent={ErrorFallback}>
           <ToastContainer
             position="top-center"

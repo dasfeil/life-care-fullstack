@@ -169,7 +169,7 @@ export default function SignUp() {
           validateOnBlur={false}
         >
           {() => (
-            <Form className="mt-24 min-h-screen flex flex-col items-center">
+            <Form className="mt-24 flex flex-col items-center w-full md:w-[30rem] p-14 bg-white rounded-md self-center drop-shadow-md">
               {error &&
                 error.map((e) => (
                   <p className="text-red-500" key={e}>

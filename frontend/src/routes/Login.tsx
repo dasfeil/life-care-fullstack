@@ -11,7 +11,7 @@ export default function Login() {
   return (
     <>
       {!auth?.username ? (
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center w-full md:w-[30rem] p-14 bg-white rounded-md self-center drop-shadow-md">
           <p className="text-center font-bold text-5xl mb-10">Log in</p>
           <PillButton
             className="bg-[#3B5998] text-white mb-3 hover:bg-[#2f477a]"
@@ -39,7 +39,7 @@ export default function Login() {
           </p>
         </div>
       ) : (
-        <Navigate to="/" replace />
+        <Navigate to="/user/profile" replace />
       )}
     </>
   );

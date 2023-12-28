@@ -44,7 +44,7 @@ export default function MemberInquiry() {
   const pageSize = 5;
 
   const inquire = async (values: data, page: number) => {
-    return handleInquiryPagination(values, page, pageSize)
+    return await handleInquiryPagination(values, page, pageSize)
       .then((res) => res.data)
       .then((data) => {
         setData(data.userList);
@@ -99,7 +99,7 @@ export default function MemberInquiry() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center w-full md:w-[80%] p-14 bg-white rounded-md self-center drop-shadow-md flex-grow">
       <p className="text-center font-bold text-3xl mb-10">Member Inquiry</p>
       <InquiryForm
         initialValues={formData}
@@ -114,7 +114,7 @@ export default function MemberInquiry() {
         ))}
       {data && data?.length !== 0 ? (
         <>
-          <div className="flex flex-col items-center mb-1">
+          <div className="flex flex-col items-center mt-6 mb-3">
             <span className="text-sm text-gray-700">
               Showing{" "}
               <span className="font-semibold text-gray-900">
@@ -258,7 +258,7 @@ export default function MemberInquiry() {
           )}
         </>
       ) : (
-        <div className="font-bold text-5xl md:text-9xl text-gray-200 mt-5">
+        <div className="font-bold text-5xl md:text-5xl text-gray-200 mt-5">
           No data
         </div>
       )}
