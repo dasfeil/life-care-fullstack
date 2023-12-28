@@ -3,7 +3,6 @@ import { handleLogout } from "../axios/instance";
 import { useNavigate } from "react-router-dom";
 import { useErrorBoundary } from "react-error-boundary";
 import useAuth from "../hooks/useAuth";
-import { AuthResponse } from "../types";
 
 export default function Logout() {
   const navigate = useNavigate();
