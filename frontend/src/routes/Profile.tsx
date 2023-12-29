@@ -12,7 +12,7 @@ export default function Profile() {
           />
         </div>
       </div>
-      <div className="mt-24 flex w-full text-xl sm:text-3xl px-2 lg:self-start lg:justify-around">
+      <div className="mt-24 flex w-full text-xl sm:text-3xl px-2 lg:self-start lg:gap-72 lg:mx-20">
         <div className="flex-grow m-3 mt-10 w-full md:w-[35rem] md:flex-grow-0 flex flex-col gap-5 border-2 drop-shadow-sm rounded-2xl p-4 bg-white">
           <div>
             <p className="text-[#696969]">Your Name</p>
