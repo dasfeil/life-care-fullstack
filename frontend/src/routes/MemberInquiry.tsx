@@ -90,7 +90,7 @@ export default function MemberInquiry() {
           phoneNo: "",
         })
           .then((res) => res.data)
-          .catch(setError);
+          .catch(error => console.log(error));
     }
   };
 

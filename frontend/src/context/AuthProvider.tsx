@@ -21,7 +21,6 @@ const AuthContext = createContext<IAuthContext>(initialValues);
 const AuthProvider = ({ children }: Props) => {
   const [auth, setAuth] = useState<AuthResponse>();
   const [isLoading, setIsLoading] = useState(true);
-
   useEffect(() => {
     let isMounted = true;
     handleCookieToken()
@@ -31,7 +30,7 @@ const AuthProvider = ({ children }: Props) => {
       })
       .catch(() => {
         console.log("Not authenticated");
-        setIsLoading(false)
+        setIsLoading(false);
       });
     return () => {
       isMounted = false;
