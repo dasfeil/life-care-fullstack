@@ -40,5 +40,7 @@ export type AuthResponse = {
     id: number,
     username: string,
     email: string,
-    roles: string[]
+    roles: string[],
+    phoneNo: string,
+    userRank: string
 }

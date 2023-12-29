@@ -27,7 +27,7 @@ Instance.interceptors.response.use(
         }
 
         if (statusCode === null) {
-            return Promise.reject(["No server respond"])
+            return Promise.reject(["No server response"])
         }
         return Promise.reject(error);
     }

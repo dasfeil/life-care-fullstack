@@ -122,7 +122,7 @@ public class UserBiz implements UserDetailsService {
 
         String jwt = jwtUtils.generateToken(user, userDTO.isPersist());
         JwtResponse jwtResponse = new JwtResponse(user.getUserNo(),
-                user.getUsername(), user.getEmail(), rolesNames);
+                user.getUsername(), user.getEmail(), rolesNames, user.getPhoneNo(), user.getUserRank());
         Cookie cookie = new Cookie("jwt", jwt);
 
         if (userDTO.isPersist()) {
@@ -142,7 +142,7 @@ public class UserBiz implements UserDetailsService {
         List<String> rolesNames = new ArrayList<>();
         user.getRoles().forEach(r -> rolesNames.add(r.getRoleName()));
         JwtResponse jwtResponse = new JwtResponse(user.getUserNo(),
-                user.getUsername(), user.getEmail(), rolesNames);
+                user.getUsername(), user.getEmail(), rolesNames, user.getPhoneNo(), user.getUserRank());
         return ResponseEntity.ok().body(jwtResponse);
     }
 

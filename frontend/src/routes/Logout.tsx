@@ -11,8 +11,8 @@ export default function Logout() {
   useEffect(() => {
     handleLogout()
       .then(() => {
-        setAuth({ username: "", email: "", id: Infinity, roles: [] });
-        navigate("/", {replace: true});
+        setAuth(undefined);
+        navigate("/", { replace: true });
       })
       .catch(() =>
         showBoundary(new Error("Unexpected error, please try again later"))

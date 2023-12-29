@@ -8,7 +8,7 @@ type Props = {
 
 type IAuthContext = {
   auth: AuthResponse | undefined;
-  setAuth: (state: AuthResponse) => void;
+  setAuth: (state: AuthResponse | undefined) => void;
 };
 
 const initialValues: IAuthContext = {
