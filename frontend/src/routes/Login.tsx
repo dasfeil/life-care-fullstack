@@ -13,6 +13,8 @@ export default function Login() {
       {!auth?.username ? (
         <div className="flex flex-col items-center w-full md:w-[30rem] p-14 bg-white rounded-md self-center drop-shadow-md">
           <p className="text-center font-bold text-5xl mb-10">Log in</p>
+          <LoginForm />
+          <hr className="w-[24rem] mt-10 mb-5" />
           <PillButton
             className="bg-[#3B5998] text-white mb-3 hover:bg-[#2f477a]"
             text="Continue with Facebook"
@@ -25,8 +27,6 @@ export default function Login() {
             icon={<GoogleSVG />}
             onClick={() => console.log("Doesn't do anything yet")}
           />
-          <hr className="w-[24rem] mt-10 mb-5" />
-          <LoginForm />
           <hr className="m-5 border-t-gray-300 w-[26rem]" />
           <p>
             Don't have an account?{" "}
